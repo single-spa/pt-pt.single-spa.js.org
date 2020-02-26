@@ -1,83 +1,85 @@
 ---
 id: getting-started-overview
-title: Getting Started with single-spa
-sidebar_label: Overview of single-spa
+title: Começando com o single-spa
+sidebar_label: Começando com o single-spa
 ---
 
-## JavaScript microfrontends
+## Microfrontends de JavaScript
 
-[Join the chat on Slack](https://join.slack.com/t/single-spa/shared_invite/enQtODAwNTIyMzc4OTE1LWUxMTUwY2M1MTY0ZGMzOTUzMGNkMzI1NzRiYzYwOWM1MTEzZDM1NDAyNWM3ZmViOTAzZThkMDcwMWZmNTFmMWQ)
+[Juntar-se ao chat no Slack](https://join.slack.com/t/single-spa/shared_invite/enQtODAwNTIyMzc4OTE1LWUxMTUwY2M1MTY0ZGMzOTUzMGNkMzI1NzRiYzYwOWM1MTEzZDM1NDAyNWM3ZmViOTAzZThkMDcwMWZmNTFmMWQ)
 
-single-spa is a framework for bringing together multiple javascript microfrontends in a frontend application. Architecting your frontend using single-spa enables many benefits, such as:
+single-spa é uma _framework_ que junta vários microfrontends em Javascript numa única aplicação de frontend. Usar o single-spa na arquitetura do seu frontend fornece vários benefícios, tal como:
 
-- [Use multiple frameworks](ecosystem.md#help-for-frameworks) on the same page [without page refreshing](building-applications.md)
-  ([React](ecosystem-react.md), [AngularJS](ecosystem-angularjs.md), [Angular](ecosystem-angular.md), [Ember](ecosystem-ember.md), or whatever you're using)
-- Deploy your microfrontends independently.
-- Write code using a new framework, without rewriting your existing app
-- Lazy load code for improved initial load time.
+- [Use várias frameworks](ecosystem.md#help-for-frameworks) nam esma página [sem refresh de páginas](building-applications.md)
+  ([React](ecosystem-react.md), [AngularJS](ecosystem-angularjs.md), [Angular](ecosystem-angular.md), [Ember](ecosystem-ember.md), ou outro que esteja usando)
+- Deploy independente de microfrontends
+- Escreva código usando uma nova framework, sem reescrever toda a sua app existente
+- Lazy load code para melhor load time inicial.
 
-## Demos and examples
+## Demos e exemplos
 
-See [our examples page](/docs/examples).
+Ver a nossa [página de exemplos](/docs/examples).
 
-## Architectural Overview
+## Arquitetura
 
-single-spa takes inspiration from modern framework component lifecycles by applying lifecycles to entire applications.
-It was born out of Canopy's desire to use React + react-router instead of being forever stuck with our AngularJS + ui-router application, and now single-spa supports almost any framework. Since JavaScript is notorious for the short-life of its many frameworks, we decided to make it easy to use whichever frameworks you want.
+single-spa inspira-se de _lifecycle components frameworks_ modernas aplicando _lifecycles_ a aplicações inteiras.
+Nasceu do desejo da Canopy em usar React + react-router em vez de ficar preso eternamente com uma aplicação AngularJS + ui-router. Agora o single-spa suporta práticamente qualquer framework. Sendo que o JavaScript é conhecido pelo tempo de vida curto das suas múltiplas frameworks, decidimos fazer com que seja fácil mudar entre as frameworks que quiser.
 
-single-spa apps consist of the following:
+As aplicações de single-spa consistem no seguinte:
 
-1. [Applications](building-applications.md), each of which is an entire SPA itself (sort of). Each application can respond to url routing events and must know how to bootstrap, mount, and unmount themselves from the DOM. The main difference between a traditional SPA and single-spa applications is that they must be able to coexist with other applications, and they do not each have their own html page.
+1. [Aplicações](building-applications.md), em que cada uma é uma SPA inteira (mais ou menos). Cada aplicação pode reagir a eventos de URL routing e deve saber como fazer bootstrap, mount e unmount de si mesmo perante a DOM. A principal diferença entre uma SPA tradicional e aplicações de single-spa é que estas devem poder coexistir com outras aplicações e não necessitam de ter cada uma a sua pópria página de HTML.
+	
+	Por exemplo, a suas SPAs de React ou Angular são aplicações. Quando ativas, estas ficam à escuta de eventos de URL routing e inserem conteúdo na DOM. Quando inativas, estas não reagem a eventos e são totalmente removidas da DOM.
 
-    For example, your React or Angular SPAs are applications. When active, they listen to url routing events and put content on the DOM. When inactive, they do not listen to url routing events and are totally removed from the DOM.
-2. A [single-spa-config](configuration), which is the html page _and_ the JavaScript that registers applications with single-spa. Each application is registered with three things:
-    - A name
-    - A function to load the application's code
-    - A function that determines when the application is active/inactive
+2. O [single-spa-config](configuration), que contém a página de HTML _e_ o JavaScript que regista as aplicações perante o single-spa. Cada aplicação é registada com três coisas:
+    - Um nome
+    - Uma função que carrega o código da aplicação
+    - Uma funcção que determina quando é que a aplicações está ativa/inativa
 
-## The Recommended Setup
 
-The single-spa core team has put together documentation, tools, and videos showing the currently encouraged best practices with single-spa. Check out [these docs](./recommended-setup.md) for more information.
+## O setup recomendado
 
-## How hard will it be to use single-spa?
+A equipa code do single-spa criou em conjunto documentação, ferramentas e vídeos mostrando as melhores práticas incentivadas pelo single-spa. Veja [esta documentação](./recommended-setup.md) para mais informações.
 
-single-spa works with ES5, ES6+, TypeScript, Webpack, SystemJS, Gulp, Grunt, Bower, ember-cli, or really any build system available. You can npm install it, jspm install it, or even just use a `<script>` tag if you prefer.
+## Quão difícil será usar o single-spa?
 
-Our objective is to make using single-spa as easy as possible. But we should also point out that this is an advanced architecture that is different from how front-end applications are typically done.
+single-spa funciona com ES5, ES6+, TypeScript, Webpack, SystemJS, Gulp, Grunt, Bower, ember-cli, ou realmente qualquer _build system_ disponível. Pode fazer _npm install_ ou mesmo apenas usar uma tag `<script>` se preferir.
 
-If you're not starting your application from scratch, you'll have to [migrate your SPA](migrating-existing-spas.md) to become a single-spa application.
+O nosso objetivo é fazer com que o uso do single-spa seja o mais fácil possível. Mas também devemos salientar que esta é uma arquitetura avançada que é diferente de como as aplicações de frontend geralmente são desenvolvidas.
 
-* [React - Migrating to single-spa](migrating-react-tutorial.md)
-* [AngularJS - Migrating to single-spa](migrating-angularJS-tutorial.md)
+Se não está a começar a sua aplicação do zero, deverá [migrar a sua SPA](migrating-existing-spas.md) para se tornar numa aplicação single-spa.
 
-single-spa works in Chrome, Firefox, Safari, IE11, and Edge.
+* [React - Migrando para single-spa](migrating-react-tutorial.md)
+* [AngularJS - Migrando para single-spa](migrating-angularJS-tutorial.md)
 
-## Isn't single-spa sort of a redundant name?
+single-spa funciona em Chrome, Firefox, Safari, IE11, e Edge.
 
-Yep.
+## single-spa não é um nome redundante?
 
-## Documentation
+Sim.
 
-The documentation is divided into several sections:
+## Documentação
 
-* [Getting Started](getting-started-overview.md)
-* [single-spa Applications](building-applications.md)
-* [single-spa Parcels](parcels-overview.md)
-* [Examples](examples.md)
-* [Ecosystem](ecosystem.md)
-* [Contributing Guide](contributing-overview.md)
+A documentação está dividida em várias seções:
+
+* [Começando](getting-started-overview.md)
+* [Aplicaçõs de single-spa](building-applications.md)
+* [Parcels de single-spa](parcels-overview.md)
+* [Exemplos](examples.md)
+* [Ecossistema](ecosystem.md)
+* [Guia de contribuição](contributing-overview.md)
 * [Blog](https://single-spa.js.org/blog/)
-* [Where to Get Support](https://single-spa.js.org/en/help.html)
+* [Onde obter suporte](https://single-spa.js.org/en/help.html)
 
-You can help improve the single-spa website by sending pull requests to the [`single-spa.js.org` repository](https://github.com/single-spa/single-spa.js.org).
+Você pode ajudar a melhorar o site do single-spa enviando _pull requests_ para o repositório [`single-spa.js.org`](https://github.com/single-spa/single-spa.js.org).
 
-## Simple Usage
+## Uso simples
 
-For a full example, check out [this simple webpack example](https://github.com/joeldenning/simple-single-spa-webpack-example) or [this starting from scratch tutorial](starting-from-scratch.md).
+Para ver um exemplo completo, consulte [este exemplo simples do webpack](https://github.com/joeldenning/simple-single-spa-webpack-example) ou [este tutorial a partir do zero](startup-from-scratch.md ).
 
-To create a single-spa application, you will need to do three things:
+Para criar uma aplicação single-spa, deverá fazer três coisas:
 
-1. Create an html file:
+1. Criar um ficheiro HTML:
 
 ```html
 <html>
@@ -87,21 +89,21 @@ To create a single-spa application, you will need to do three things:
 </html>
 ```
 
-2. Create a single-spa-config. Check out the [docs](configuration) for more detail.
+2. Criar um single-spa-config. Veja a [documentação](configuration) para mais detalhes.
 
 ```js
 import * as singleSpa from 'single-spa';
 
 const appName = 'app1';
 
-/* The loading function is a function that returns a promise that resolves with the javascript application module.
- * The purpose of it is to facilitate lazy loading -- single-spa will not download the code for a application until it needs to.
- * In this example, import() is supported in webpack and returns a Promise, but single-spa works with any loading function that returns a Promise.
+/* A loading function é uma função que retorna uma Promise e faz resolve com o módulo de javascript da aplicação.
+ * O seu propósito é o de facilitar o lazy loading -- single-spa não irá carregar o código até que este seja necessário.
+ * Neste exemplo, import() é suportado no webpack e retorna uma Promise, mas o single-spa funciona com qualquer loading function que retorne uma Promise
  */
 const loadingFunction = () => import('./app1/app1.js');
 
-/* single-spa does some top-level routing to determine which application is active for any url. You can implement this routing any way you'd like.
- * One useful convention might be to prefix the url with the name of the app that is active, to keep your top-level routing simple.
+ /* single-spa faz algum top-level routing para determinar que aplicação (ou aplicações) está ativa para qualquer URL. Pode implementar este routing da forma que preferir.
+ * Uma convenção útil poderá ser a de criar um prefixo no URL com o nome da aplicação ativa, de forma a manter o top-level routing simples.
  */
 const activityFunction = location => location.pathname.startsWith('/app1');
 
@@ -109,7 +111,7 @@ singleSpa.registerApplication(appName, loadingFunction, activityFunction);
 singleSpa.start();
 ```
 
-3. Create an application. Check out the [docs](building-applications.md) for more detail.
+3. Crie uma aplicação. Veja a [documentação](building-applications.md) para mais detalhes.
 
 ```js
 //app1.js
@@ -130,7 +132,7 @@ export function mount(props) {
 	return Promise
 		.resolve()
 		.then(() => {
-			// This is where you would normally use a framework to mount some ui to the dom. See https://single-spa.js.org/docs/ecosystem.html.
+			// Isto é geralmente onde a framework seria mounted com alguma interface na DOM. Ver https://single-spa.js.org/docs/ecosystem.html.
 			domEl.textContent = 'App 1 is mounted!'
 		});
 }
@@ -139,7 +141,7 @@ export function unmount(props) {
 	return Promise
 		.resolve()
 		.then(() => {
-			// This is normally where you would tell the framework to unmount the ui from the dom. See https://single-spa.js.org/docs/ecosystem.html
+			// Isto é geralmente onde diría à framework para fazer unmount da interface da DOM. Ver https://single-spa.js.org/docs/ecosystem.html.
 			domEl.textContent = '';
 		})
 }
@@ -147,22 +149,22 @@ export function unmount(props) {
 
 ## API
 
-Read more at [single-spa API](api.md) and [application api](building-applications.md#application-lifecycle).
+Leia mais em [single-spa API](api.md) e [API de aplicações](building-applications.md#application-lifecycle).
 
-## Contributing
+## Contribuindo
 
-The main purpose of this repository is to continue to evolve single-spa, making it better and easier to use. Development of single-spa, and the [single-spa ecosystem](ecosystem.md) happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving single-spa.
+O principal objetivo deste repositório é o de continuar a evolução do single-spa, tornando-o melhor e mais fácil de usar. O desenvolvimento do single-spa e do seu [ecossistema](ecosystem.md) é feito no seio do GitHub, e somos gratos à comunidade por contribuir com correções e melhorias. Leia abaixo para saber como você pode participar da melhoria do single-spa.
 
-### [Code of Conduct](CODE_OF_CONDUCT.md)
+### [Código de conduta](CODE_OF_CONDUCT.md)
 
-single-spa has adopted a Code of Conduct that we expect project participants to adhere to. Please read [the full text](CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
+single-spa adotou um Código de Conduta que esperamos que os participantes do projeto cumpram. Leia [o texto completo](CODE_OF_CONDUCT.md) para que possa entender quais as ações que serão ou não toleradas.
 
-### [Contributing Guide](contributing-overview.md)
+### [Guia de contribuição](contributing-overview.md)
 
-Read our [contributing guide](./contributing-overview.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to single-spa.
+Leia o nosso [guia de contribuição](./contributing-overview.md) para aprender sobre nosso processo de desenvolvimento, como propor correções e melhorias e como desenvolver e testar suas alterações no single-spa.
 
-## Who's Using This?
+## Quem usa isto?
 
-See [user showcase](/users).
+Ver o [user showcase](/users).
 
-Is your company or project using single-spa? Let us know by submitting a PR to [this section](https://github.com/single-spa/single-spa.js.org/blob/master/website/src/data/users.js)!
+A sua empresa ou projeto usam o single-spa? Informe-nos submetendo um PR para [esta secção](https://github.com/single-spa/single-spa.js.org/blob/master/website/src/data/users.js)!
