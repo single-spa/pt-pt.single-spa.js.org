@@ -1,53 +1,54 @@
 # single-spa.js.org
 [![CircleCI](https://circleci.com/gh/single-spa/single-spa.js.org.svg?style=svg)](https://circleci.com/gh/single-spa/single-spa.js.org)
 
-This repo contains the source code and documentation powering https://pt-pt.single-spa.js.org.
+Este repositório contem o código fonte e documentação para o https://pt-pt.single-spa.js.org.
 
-## Getting started
+## Começando
 
-### Prerequisites
+### Pré-requisitos
 
 1. Git
-1. Node: install version 8.4 or greater
-1. Yarn: See [Yarn website for installation instructions](https://yarnpkg.com/lang/en/docs/install/)
-1. A fork of the repo (for any contributions)
-1. A clone of the [single-spa.js.org repo](https://github.com/single-spa/single-spa.js.org) on your local machine
+2. Node: instalar a versão 8.4 ou acima
+3. Yarn: Ver [Instruções de instalação no website do Yarn](https://yarnpkg.com/lang/en/docs/install/)
+4. Um _fork_ do repositório (para contribuições)
+5. Um clone do repositório [single-spa.js.org](https://github.com/single-spa/single-spa.js.org) na sua máquina
 
-### Installation
+### Instalação
 
-1. `cd single-spa.js.org` to go into the project root
-1. `yarn` to install the website's npm dependencies
+1. `cd single-spa.js.org` dentro da raíz do projeto
+2. `yarn` para instalar as dependências _npm_ do site
 
-### Running locally
+### Correndo localmente
 
-1. `cd website` then run `yarn start` to start the hot-reloading development server (powered by [Docusaurus](https://docusaurus.io/))
-1. `open http://localhost:3000` to open the site in your favorite browser
+1. `cd website` seguido de `yarn start` para iniciar o servidor de _hot-reloading_ (fornecido via [Docusaurus](https://docusaurus.io/))
+2. abrir `http://localhost:3000` no seu browser preferido para ver o site
 
-## Contributing
+## Contribuir
 
-Want to help improve the `single-spa.js.org` website? Checkout the steps below to learn how.
+Quer ajudar a melhorar o site do `single-spa.js.org`? Veja os passos abaixo para saber como.
 
-### Create a branch
+### Crie um branch
 
-1. `git checkout master` from any folder in your local `single-spa.js.org` repository
-1. `git pull origin master` to ensure you have the latest main code
-1. `git checkout -b the-name-of-my-branch` (replacing `the-name-of-my-branch` with a suitable name) to create a branch
+1. `git checkout master` a partir de qualquer pasta do seu repositório local do `single-spa.js.org`
+2. `git pull origin master` para garantir que tem a versão do código mais atual
+3. `git checkout -b nome-do-meu-branch` (mudando `nome-do-meu-branch` para um nome adequado) para criar o branch
 
-### Make the change
+### Fazer alterações
 
-1. Save the files and check in the browser
-  1. Changes to files in `website/pages/en` will hot-reload
-  1. Changes to markdown files in `docs` will hot-reload
-  1. Changes to `siteConfig.js` and `sideBards.json` will not hot-reload
+1. Guarde as algerações e verifique no browser
+2. Alterações a ficheiros na pasta `website/pages/en` serão recarregados via _hot-reload_
+3. Alterações a ficheiros de _markdown_ na pasta `docs` serão recarregados via _hot-reload_
+4. Alterações aos ficheiros `siteConfig.js` e `sideBards.json` não serão recarregados via _hot-reload_
 
-### Test the change
+### Testar as alterações
 
-1. If possible, test any visual changes in all latest versions of common browsers, on both desktop and mobile.
+1. Se possível, teste quaisquer modificações visuais em todas as últimas versões dos browsers mais comuns, tanto em desktop como mobile.
 
-### Push it
+### Fazer push
 
-1. `git add . && git commit -m "My message"` (replacing `My message` with a commit message, such as `Fixed header logo`) to stage and commit your changes
-1. `git push my-fork-name the-name-of-my-branch`
-1. Go to the [single-spa.js.org repo](https://github.com/single-spa/single-spa.js.org) and you should see recently pushed branches.
-1. Follow GitHub's instructions.
-1. If possible, include screenshots of visual changes.
+1. `git add . && git commit -m "A minha mensagem"` (mudando `A minha mensagem` com uma mensagem de commit, tal como `Fixed header logo`) para fazer _stage_ e _commit_ das suas alterações
+2. `git push nome-do-meu-fork nome-do-meu-branch`
+3. Visite o repositório [single-spa.js.org](https://github.com/single-spa/single-spa.js.org) e deverá ver as pushed branches mais recentes
+4. Siga as instruções do GitHub
+5. Se possível, inclua screenshots de mudificações visuais
+
