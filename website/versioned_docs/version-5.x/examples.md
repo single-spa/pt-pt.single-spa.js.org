@@ -1,29 +1,29 @@
 ---
 id: examples
-title: Single-spa Examples
-sidebar_label: Resources
+title: Examplos de Single-spa
+sidebar_label: Recursos
 ---
 
-## Core team examples
+## Exemplos da equipa Core
 
-### Actively maintained
+### Maintidos ativamente
 
-- [React Microfrontends](https://github.com/react-microfrontends) (check out root-config repo first)
-- [Vue Microfrontends](https://github.com/vue-microfrontends) (check out root-config repo first)
-- [Polyglot Microfrontends](https://github.com/polyglot-microfrontends) (check out root-config repo first)
-- [single-spa-es5-angularjs](https://github.com/joeldenning/single-spa-es5-angularjs) is a very tiny es5 example with angularjs.
+- [React Microfrontends](https://github.com/react-microfrontends) (ver repositório _root-config_ primeiro)
+- [Vue Microfrontends](https://github.com/vue-microfrontends) (ver repositório _root-config_ primeiro)
+- [Polyglot Microfrontends](https://github.com/polyglot-microfrontends) (ver repositório _root-config_ primeiro)
+- [single-spa-es5-angularjs](https://github.com/joeldenning/single-spa-es5-angularjs) é um pequeno exemplo de ES5 com AngularJS
 
-### Older examples
+### Exemplos antigos
 
-- [coexisting-angular-microfrontends](https://github.com/joeldenning/coexisting-angular-microfrontends) is a full blown Angular 7 microfrontends repo that combines three separate Angular CLI projects into one page.
-- [coexisting-vue-microfrontends](https://github.com/joeldenning/coexisting-vue-microfrontends) shows three separate Vue CLI projects existing within one page.
-- [single-spa-portal-example](https://gitlab.com/TheMcMurder/single-spa-portal-example) is a great example of coexisting React microfrontends.
-- [single-spa-parcel-example](https://github.com/Guillembonet/single-spa-parcel-example) is an example of one vue and one react microfrontends, containing a react and a vue parcel respectively and two node.js microservices running in 6 different Docker VM's seamlessly working together in a single web app located in a 7th VM.
-- [simple-single-spa-webpack-example](https://github.com/joeldenning/simple-single-spa-webpack-example) is a small, simple example that can be used as a webpack starter.
+- [coexisting-angular-microfrontends](https://github.com/joeldenning/coexisting-angular-microfrontends) é um repositório completo de microfrontends em Angular 7 que combina três projetos Angular CLI numa só página.
+- [coexisting-vue-microfrontends](https://github.com/joeldenning/coexisting-vue-microfrontends) mostra três projetos Vue CLI numa só página.
+- [single-spa-portal-example](https://gitlab.com/TheMcMurder/single-spa-portal-example) é um ótimo exemplo de microfrontends coexistentes em React.
+- [single-spa-parcel-example](https://github.com/Guillembonet/single-spa-parcel-example) é um exemplo de um microfrontend em Vue e um em Reac, contendo um _parcel_ de Vue e React respectivamente e dois microsserviços em NodeJS, correndo 6 VMs de Docker trabalhando perfeitamente juntos numa única web app dentro da sétima VM.
+- [simple-single-spa-webpack-example](https://github.com/joeldenning/simple-single-spa-webpack-example) é um exemplo simples e pequeno que pode ser usado como um _webpack starter_.
 
-## Community examples
+## Exemplos da comunidade
 
-- [single-spa-login-example-with-npm-packages](https://github.com/jualoppaz/single-spa-login-example-with-npm-packages) is a single-spa application example which imports registered applications from NPM packages and manages authentication features as login.
-- [demo-single-spa-with-spax](https://github.com/crossjs/spax/tree/master/packages/demo-single-spa) is a tiny [spax](https://spax.js.org) example with react-scripts and craco.
+- [single-spa-login-example-with-npm-packages](https://github.com/jualoppaz/single-spa-login-example-with-npm-packages) é um exemplo de uma aplicação Single-spa que importa aplicações registadas a partir de pacotes NPM e gera as funcionalidades de autenticação.
+- [demo-single-spa-with-spax](https://github.com/crossjs/spax/tree/master/packages/demo-single-spa) é um pequeno exemplo em [spax](https://spax.js.org) com _react-scripts_ e _craco_.
 
-Have your own starter repo? [Submit a PR](https://github.com/single-spa/single-spa.js.org/edit/master/docs/examples.md) to add yours to this list.
+Tem o seu próprio _starter repo_? [Submita um PR](https://github.com/single-spa/single-spa.js.org/edit/master/docs/examples.md) para a adicionar o seu a esta lista.

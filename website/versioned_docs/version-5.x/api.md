@@ -1,15 +1,15 @@
 ---
 id: api
-title: Applications API
-sidebar_label: Applications API
+title: API de Apps
+sidebar_label: API de Apps
 ---
 
-single-spa exports named functions and variables rather than a single default export.
-This means importing must happen in one of two ways:
+single-spa exporta _named functions_ e variáveis em vez de um simples _export default_.
+Isso significa que a importação deve acontecer numa de duas formas:
 
 ```js
 import { registerApplication, start } from 'single-spa';
-// or
+// ou
 import * as singleSpa from 'single-spa';
 ```
 
@@ -19,26 +19,26 @@ import * as singleSpa from 'single-spa';
 singleSpa.registerApplication('appName', () => System.import('appName'), location => location.pathname.startsWith('appName'))
 ```
 
-`registerApplication` is the most important api your root config will use. Use this function to register any application within single-spa.
+`registerApplication` é a API mais importante que a sua _root config_ irá usar. Use esta função para registar qualquer aplicação dentro do single-spa.
 
-Note that if an application is registered from within another application, that no hierarchy will be maintained between the applications.
+Note que se uma aplicação é registada de dentro de outra aplicação, nenhuma hierarquia será mantida entre aplicações.
 
-> It is described in detail inside of the [Configuration docs](configuration#registering-applications)
+> Está descrita em detalhe dentro da documentação de [Configuração](configuration#registering-applications)
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>appName: string</dt>
-	<dd>App name that single-spa will register and reference this application with, and will be labelled with in dev tools.</dd>
+	<dd>O nome da app que o single-spa irá usar para registar e referenciar a aplicação, e que é rotulada nos _dev tools_.</dd>
 	<dt>applicationOrLoadingFn: () => &lt;Function | Promise&gt;</dt>
-	<dd>Must be a loading function that either returns the resolved application or a promise.</dd>
+	<dd>Deve ser uma _loading function_ que tanto retorna a aplicação montada ou uma promise.</dd>
 	<dt>activityFn: (location) => boolean</dt>
-	<dd>Must be a pure function. The function is called with <code>window.location</code> as the first argument !-- TODO: any only? --> and should return a truthy value whenever the application should be active.</dd>
-	<dt>customProps?: Object = {}</dt>
-	<dd>Will be passed to the application during each lifecycle method.</dd>
+	<dd>Deve ser uma função pura. A função é chamada com <code>window.location</code> como o seu único argumento !-- TODO: e único? -->e deve retornar um valor _truthy_ sempre que a aplicação esteja ativa.</dd>
+	<dt>customProps?: Object = &#123;&#125;</dt>
+	<dd>Será passado à aplicação aquando cada método de _lifecycle_.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
@@ -47,13 +47,13 @@ Note that if an application is registered from within another application, that 
 singleSpa.start();
 ```
 
-Must be called by your single spa config. Before `start` is called, applications will be loaded, but will never be bootstrapped, mounted or unmounted. The reason for `start` is to give you control over the performance of your single page application. For example, you may want to declare registered applications immediately (to start downloading the code for the active ones), but not actually mount the registered applications until an initial AJAX request (maybe to get information about the logged in user) has been completed. In that case, the best performance is achieved by calling `registerApplication` immediately, but calling `start` after the AJAX request is completed.
+Deve ser chamada pela configuração do single-spa. Antes de `start` ser chamada, as aplicações serão carregadas, mas nunca serão <em>bootstrapped</em>, <em>mounted</em> ou <em>unmounted</em>. A razão do `start` existir é para lhe dar controle sob a <em>performance</em> da sua aplicação SPA. Por exemplo, é possível que queira declarar aplicações registadas imediatamente (para descarregar o codigo das que estiverem ativas), mas não fazer _mount_ até que uma chamada AJAX inicial (talvez para buscar informação sobre o utilizador logado) tenha sido completada. Nesse caso, a melhor performance é atingida chamando `registerApplication` imediatamente, mas chamando `start` quando a chamada AJAX finalizar.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
-none
+nenhum
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
@@ -63,51 +63,50 @@ none
 singleSpa.triggerAppChange();
 ```
 
-Returns a Promise that will resolve/reject when all apps have mounted/unmounted. This was built for testing single-spa and is likely not
-needed in a production application.
+Returna uma _Promise_ que irá fazer _resolve/reject_ quando todas as apps tiverem feito _mount_ ou _unmount_. Isto foi desenvolvido para testar o single-spa e provavelmente não é necessário em produção.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
-none
+nenhum
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>Promise</dt>
-	<dd>Returns a Promise that will resolve/reject when all apps have mounted.</dd>
+	<dd>Retorna a <em>Promise</em> que ferá resolve/reject quando todas as apps tiverem feito <em>mount</em> ou <em>unmount</em>.</dd>
 </dl>
 
 ## navigateToUrl
 
 ```js
-// Three ways of using navigateToUrl
+// Três formas de usar navigateToUrl
 singleSpa.navigateToUrl("/new-url");
 singleSpa.navigateToUrl(document.querySelector('a'));
 document.querySelector('a').addEventListener(singleSpa.navigateToUrl);
 ```
 
 ```html
-<!-- A fourth way to use navigateToUrl, this one inside of your HTML -->
-<a href="/new-url" onclick="singleSpaNavigate()">My link</a>
+<!-- Uma quarta forma de usar navigateToUrl, esta dentro do seu HTML -->
+<a href="/new-url" onclick="singleSpaNavigate()">O meu link</a>
 ```
 
-Use this utility function to easily perform url navigation between registered applications without needing to deal with `event.preventDefault()`, `pushState`, `triggerAppChange()`, etc.
+Use esta função para navigar entre aplicações registadas facilmente sem ter de lidar com `event.preventDefault()`, `pushState`, `triggerAppChange()`, etc.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>navigationObj: string | context | DOMEvent</dt>
 	<dd>
-		navigationObj must be one of the following types:
+		navigationObj deve ser um dos seguintes tipos:
 		<ul>
-			<li>a url string.</li>
-			<li>a context / thisArg that has an <code>href</code> property; useful for calling <code>singleSpaNavigate.call(anchorElement)</code> with a reference to the anchor element or other context.</li>
-			<li>a DOMEvent object for a click event on a DOMElement that has an <code>href</code> attribute; ideal for the <code>&lt;a onclick="singleSpaNavigate">&lt;/a></code> use case.</li>
+			<li>uma <em>string</em> url.</li>
+			<li>um contexto / thisArg que tenha uma propriedade <code>href</code> útil para chamar <code>singleSpaNavigate.call(anchorElement)</code> com uma referência ao elemento <em>anchor</em> ou outro contexto.</li>
+			<li>um objeto de DOMEvent para um evento <em>click</em> num <em>DOMElement</em> que tenha um atributo <code>href</code> ideal para o caso de uso <code>&lt;a onclick="singleSpaNavigate">&lt;/a></code></li>
 		</ul>
 	</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
@@ -118,15 +117,15 @@ const mountedAppNames = singleSpa.getMountedApps();
 console.log(mountedAppNames); // ['app1', 'app2', 'navbar']
 ```
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
-none
+nenhum
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>appNames: string[]</dt>
-	<dd>Each string is the name of a registered application that is currently <code>MOUNTED</code>.</dd>
+	<dd>Cada <em>string</em> é o nome da aplicação no estado <code>MOUNTED</code>.</dd>
 </dl>
 
 ## getAppNames
@@ -136,92 +135,91 @@ const appNames = singleSpa.getAppNames();
 console.log(appNames); // ['app1', 'app2', 'app3', 'navbar']
 ```
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
-none
+nenhum
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>appNames: string[]</dt>
-	<dd>Each string is the name of a registered application regardless of app status.</dd>
+	<dd>Cada <em>string</em> é o nome da aplicação independentemente do seu estado.</dd>
 </dl>
 
 ## getAppStatus
 
 ```js
 const status = singleSpa.getAppStatus('app1');
-console.log(status); // one of many statuses (see list below). e.g. MOUNTED
+console.log(status); // um de vários estados (ver lista abaixo). ex. MOUNTED
 ```
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>appName: string</dt>
-	<dd>Registered application name.</dd>
+	<dd>Nome da aplicação registada.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>appStatus: &lt;string | null&gt;</dt>
 	<dd>
-		Will be one of the following string constants, or <code>null</code> if the app does not exist.
+		Será uma das seguintes constantes <em>string</em>, ou <code>null</code> se a app não existir.
 		<dl className="dl-inline">
 			<div>
 				<dt>NOT_LOADED</dt>
-				<dd>app has been registered with single-spa but has not yet been loaded.</dd>
+				<dd>app foi registada com o single-spa mas ainda não carregou.</dd>
 			</div>
 			<div>
 				<dt>LOADING_SOURCE_CODE</dt>
-				<dd>'s source code is being fetched.</dd>
+				<dd>o código da app está a ser buscado.</dd>
 			</div>
 			<div>
 				<dt>NOT_BOOTSTRAPPED</dt>
-				<dd>app has been loaded but not bootstrapped.</dd>
+				<dd>app foi carregada mas ainda não foi <em>bootstrapped</em>.</dd>
 			</div>
 			<div>
 				<dt>BOOTSTRAPPING</dt>
-				<dd>the <code>bootstrap</code> lifecycle function has been called but has not finished.</dd>
+				<dd>a função do ciclo <code>bootstrap</code> foi chamada mas ainda não acabou.</dd>
 			</div>
 			<div>
 				<dt>NOT_MOUNTED</dt>
-				<dd>app has been loaded and bootstrapped but not yet mounted.</dd>
+				<dd>a app foi carregada e <em>bootstrapped</em> mas ainda não foi montada.</dd>
 			</div>
 			<div>
 				<dt>MOUNTING</dt>
-				<dd>app is being mounted but not finished.</dd>
+				<dd>a app está a ser montada mas ainda não terminou.</dd>
 			</div>
 			<div>
 				<dt>MOUNTED</dt>
-				<dd>app is currently active and is mounted to the DOM.</dd>
+				<dd>a app encontra-se ativa e montada na DOM.</dd>
 			</div>
 			<div>
 				<dt>UNMOUNTING</dt>
-				<dd>app is currently being unmounted but has not finished.</dd>
+				<dd>a app esta a ser desmontada mas ainda não terminou.</dd>
 			</div>
 			<div>
 				<dt>UNLOADING</dt>
-				<dd>app is currently being unloaded but has not finished.</dd>
+				<dd>a app está a ser descarregada mas ainda não terminou.</dd>
 			</div>
 			<div>
 				<dt>SKIP_BECAUSE_BROKEN</dt>
-				<dd>app threw an error during load, bootstrap, mount, or unmount and has been siloed because it is misbehaving and has been skipped. Other apps will continue on normally.</dd>
+				<dd>a app emitiou um erro aquando o carregamento, <em>bootstrap</em>, <em>mount</em>, ou <em>unmount</em> e foi isolada porque não se comporta corretamente e foi ignorada. Outras apps As outras apps continuarão normalmente.</dd>
 			</div>
 			<div>
 				<dt>LOAD_ERROR</dt>
 				<dd>
-					The app's loading function returned a promise that rejected. This is often due to a network error attempting to download the javascript bundle for the application. Single-spa will retry loading the application after the user navigates away from the current route and then comes back to it.
+					A <em>loading function</em> da app retornou uma promessa que foi rejeitada. Isso geralmente ocorre devido a um erro de rede ao tentar carregar o <em>bundle</em> de Javascript da app. O single-spa tentará novamente o carregamento da app depois do utilizador sair e voltar para o URL atual.
 				</dd>
 			</div>
 		</dl>
 	</dd>
 </dl>
 
-**Note about LOAD_ERROR status**
+**Notas sobre o estado LOAD_ERROR**
 
-Note that if you're using SystemJS to load your bundles, you need to add the following code to get SystemJS to re-attempt the network request
-when your loading function calls `System.import()` on an application in `LOAD_ERROR` status.
+Note que se estiver a usar o SystemJS para carregar os _bundles_, precisa adicionar o seguinte código para que o SystemJS tente novamente o pedido de rede quando a _loading function_ chama `System.import()` numa app no estado `LOAD_ERROR`.
 ```js
 singleSpa.addErrorHandler(err => {
 	if (singleSpa.getAppStatus(err.appOrParcelName) === singleSpa.LOAD_ERROR) {
@@ -233,37 +231,37 @@ singleSpa.addErrorHandler(err => {
 ## unloadApplication
 
 ```js
-// Unload the application right now, without waiting for it to naturally unmount.
+// Descarregue a app agora mesmo, sem esperar que ela faça unmount naturalmente.
 singleSpa.unloadApplication('app1');
 
-// Unload the application only after it naturally unmounts due to a route change.
+// Descarregue a app apenas quando esta fizer unmount naturalmente devido a uma mudança de route
 singleSpa.unloadApplication('app1', {waitForUnmount: true});
 ```
+O propósito de fazer <em>unload</em> a uma app registada é para colocá-la de volta a um estado NOT_LOADED, o que significa que será novamente <em>bootstrapped</em> da próxima vez que precisar fazer <em>mount</em>. O principal caso de uso para tal é o de permitir o <em>hot-reloading</em> de apps inteiras, mas `unloadApplication` pode ser útil sempre que queira fazer <em>bootstrap</em> de novo da sua app.
 
-The purpose of unloading a registered application is to set it back to to a NOT_LOADED status, which means that it will be re-bootstrapped the next time it needs to mount. The main use-case for this was to allow for the hot-reloading of entire registered applications, but `unloadApplication` can be useful whenever you want to re-bootstrap your application.
+O single-spa executa as seguintes etapas quando `unloadApplication` é chamado.
 
-Single-spa performs the following steps when unloadApplication is called.
+1. Chamar o ciclo [_unload_](api.md#unload) na app registada que está a ser descarregada.
+2. Define o estado da app como NOT_LOADED
+3. Dispara um <em>reroute</em>, durante o qual o single-spa potencialmente monta a app que acabou de ser descarregada.
 
-1. Call the [unload lifecyle](api.md#unload) on the registered application that is being unloaded.
-2. Set the app status to NOT_LOADED
-3. Trigger a reroute, during which single-spa will potentially mount the application that was just unloaded.
+Como uma app registada pode ser montada quando `unloadApplication` é chamado, você pode especificar se deseja descarregar imediatamente ou se prefere esperar até que a app não seja mais montada. Isso é feito com a opção `waitForUnmount`.
 
-Because a registered application might be mounted when `unloadApplication` is called, you can specify whether you want to immediately unload or if you want to wait until the application is no longer mounted. This is done with the `waitForUnmount` option. 
-
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>appName: string</dt>
-	<dd>Registered application name.</dd>
+	<dd>Registered nome da app.</dd>
 	<dt>options?: &#123;waitForUnmount: boolean = false}</dt>
-	<dd>The options must be an object that has a <code>waitForUnmount</code> property. When `waitForUnmount` is `false`, single-spa immediately unloads the specified registered application even if the app is currently mounted. If it is <code>true</code>, single-spa will unload the registered application as soon as it is safe to do so (when the app status is not <code>MOUNTED</code>).</dd>
+	<dd>As opções devem ser um objeto que tem uma propriedade <code>waitForUnmount</code> Quando <em>waitForUnmount</em> for <em>false</em>, o single-spa descarrega imediatamente a app registada especificada mesmo que esta esteja presentemente montada. Se for <em>true</em>, single-spa irá descarregar a app registada assim que for seguro fazê-lo (quando o estado da app não for <em>MOUNTED</em>.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>Promise</dt>
-	<dd>This promise will be resolved when the registered application has been successfully removed.</dd>
+	<dt>Promise</dt>
+	<dd>Esta <em>Promise</em> irá retornar <em>resolved</em> quando a app registada tiver sido removida com sucesso.</dd>
 </dl>
 
 ## checkActivityFunctions
@@ -276,20 +274,20 @@ const appsForACertainRoute = singleSpa.checkActivityFunctions({pathname: '/app2'
 console.log(appsForACertainRoute); // ['app2']
 ```
 
-Will call every app's activity function with the `mockWindowLocation` and give you list of which applications should be mounted with that location.
+Irá chamara a _activity function_ de todas as apps com o `mockWindowLocation` e retornar a lista de todas as apps que deveríam estar montadas nessa _location_.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>mockWindowLocation: string</dt>
-	<dd>A string representing a window.location that will be used when calling every application's activity function to test if they return true.</dd>
+	<dd>Uma <em>string</em>  que representa a <em>window.location</em> que será usada ao invocar a <em>activity function</em> de cada app para testar se esta retorna <em>true</em>.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>appNames: string[]</dt>
-	<dd>Each string is the name of a registered application that matches the provided <code>mockWindowLocation</code>.</dd>
+	<dd>Cada <em>string</em> é o nome de uma app registada que corresponde ao <em>mockWindowLocation</em> fornecido.</dd>
 </dl>
 
 ## addErrorHandler
@@ -302,14 +300,14 @@ singleSpa.addErrorHandler(err => {
 });
 ```
 
-Adds a handler that will be called every time an application throws an error during a lifecycle function or activity function. When there are no error handlers, single-spa throws the error to the window.
+Acrescenta um <em>handler</em> que será chamado cada vez que uma app retorne um erro numa funçao de _lifecycle_ ou _activity function_. Quando não existirem <em>handlers</em> para errors, single-spa irá retornar um erro para a <em>window</em>.
 
 <dl className="args-list">
 	<dt>errorHandler: Function(error: Error)</dt>
-	<dd>Must be a function. Will be called with an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error">Error object</a> that additionally has a <code>message</code> and <code>appOrParcelName</code> property.</dd>
+	<dd>Deve ser uma função. Será chamada com um <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error"><em>Error object</em></a> que contém uma propriedade <code>message</code> e <code>appOrParcelName</code></dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
@@ -324,53 +322,53 @@ function handleErr(err) {
 }
 ```
 
-Removes the given error handler function. 
+Remove a função para o <em>handler</em> de erro definido.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>errorHandler: Function</dt>
-	<dd>Reference to the error handling function.</dd>
+	<dd>Referência à função do <em>handler</em>.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
 	<dt>boolean</dt>
-	<dd><code>true</code> if the error handler was removed, and <code>false</code> if it was not.</dd>
+	<dd><code>true</code> se o <em>handler</em> de erro foi removido, e <code>false</code> se não foi.</dd>
 </dl>
 
 ## mountRootParcel
 
 ```js
-// Synchronous mounting
+// Mount síncrono
 const parcel = singleSpa.mountRootParcel(parcelConfig, {prop1: 'value1', domElement: document.getElementById('a-div')});
 parcel.mountPromise.then(() => {
 	console.log('finished mounting the parcel!')
 })
 
-// Asynchronous mounting. Feel free to use webpack code splits or SystemJS dynamic loading
+// Mount asíncrono. Esteja à vontade para usar code-split do webpack ou o dynamic loading do SystemJS
 const parcel2 = singleSpa.mountRootParcel(() => import('./some-parcel.js'), {prop1: 'value1', domElement: document.getElementById('a-div')});
 ```
 
-Will create and mount a [single-spa parcel](parcels-overview.md).
+Irá cirar e montar um [single-spa parcel](parcels-overview.md).
 
-> Note: parcels do not automatically unmount. Unmounting will need to be triggered manually.
+> Note: parcels não fazem unmount automáticamente. O unmount deverá ser acionado manualmente.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
-	<dt>parcelConfig: Object or Loading Function</dt>
+	<dt>parcelConfig: Objeto ou <em>Loading Function</em></dt>
 	<dd>[parcelConfig](parcels-api.md#parcel-configuration)</dd>
-	<dt>parcelProps: Object with a domElement property</dt>
+	<dt>parcelProps: Objeto com uma propriedade <em>domElement</em></dt>
 	<dd>[parcelProps](parcels-api.md#parcel-props)</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 <dl className="args-list">
-	<dt>Parcel object</dt>
-	<dd>See <a href="/docs/parcels-api.html">Parcels API</a> for more detail.</dd>
+	<dt>Um objeto <em>Parcel</em></dt>
+	<dd>Ver <a href="/docs/parcels-api.html">Parcels API</a> para mais detalhes.</dd>
 </dl>
 
 ## ensureJQuerySupport
@@ -379,119 +377,120 @@ Will create and mount a [single-spa parcel](parcels-overview.md).
 singleSpa.ensureJQuerySupport(jQuery);
 ```
 
-jQuery uses [event delegation](https://learn.jquery.com/events/event-delegation/) so single-spa must monkey-patch each version of jQuery on the page<!-- TODO: in order to properly support... (I'm guessing navigation/routing ) -->. single-spa will attempt to do this automatically by looking for `window.jQuery` or `window.$`. Use this explicit method if multiple versions are included on your page or if jQuery is bound to a different global variable.
+jQuery usa [delegação de eventos](https://learn.jquery.com/events/event-delegation/)
+então o single-spa deve fazer um <em>monkey-patch</em> a cada versão do jQuery na página.<!-- TODO: de forma a dar suprte corretamente... (suponho navegação/routing ) -->single-spa irá tentar fazer isto automáticamente observando `window.jQuery` ou `window.$`. Use este método explícito se várias versões estão incluídas na sua página ou se o <em>jQuery</em> estiver associado a uma variável global diferente.
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
 	<dt>jQuery?: JQueryFn = window.jQuery</dt>
-	<dd>A reference to the global variable that jQuery has been bound to.</dd>
+	<dd>Uma referência à variável global à qual o jQuery está associado.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
 ## setBootstrapMaxTime
 
 ```js
-// After three seconds, show a console warning while continuing to wait.
+// Depois de três segundos, mostrar uma alerta na consola enquando continua à espera
 singleSpa.setBootstrapMaxTime(3000);
 
-// After three seconds, move the application to SKIP_BECAUSE_BROKEN status.
+// Depois de três segundos, alterar o estado da app para SKIP_BECAUSE_BROKEN
 singleSpa.setBootstrapMaxTime(3000, true);
 
-// don't do a console warning for slow lifecycles until 10 seconds have elapsed
+// Não dar alerta na consola para lifecycles lentos até pelo menos 10 segundos terem passado
 singleSpa.setBootstrapMaxTime(3000, true, 10000);
 
 ```
 
-Sets the global configuration for bootstrap timeouts.
+Define a configuração global para <em>timeouts</em> de <em>bootstrap</em>
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
-	<dt>millis: number</dt>
-	<dd>Number of milliseconds to wait for bootstrap to complete before timing out.</dd>
+	<dt>millis: número</dt>
+	<dd>Número de milisegundos a esperar para o <em>bootstrap</em> acabare antes de fazer <em>timeout</em>.</dd>
 	<dt>dieOnTimeout: boolean = false</dt>
 	<dd>
-		<p>If false, registered applications that are slowing things down will cause nothing more than some warnings in the console up until <code>millis</code> is reached.</p>
-		<p>If true, registered applications that are slowing things down will be siloed into a SKIP_BECAUSE_BROKEN status where they will never again be given the chance to break everything.</p>
-		<p>Each registered application can override this behavior for itself.</p>
+		<p>Se <em>false</em>, apps registadas que estão a causar atrasos irão apenas emitir alertas para a consola até chegar a <code>millis</code></p>
+		<p>Se <em>true</em>, apps registadas que estão a causar atrasos serão isoladas num estado SKIP_BECAUSE_BROKEN onde não terão mais oportunidade de quebrar o que seja.</p>
+		<p>Cada app registada pode fazer <em>override</em> deste comportamente de forma individual.</p>
 	</dd>
-	<dt>warningMillis: number = 1000</dt>
-	<dd>Number of milliseconds to wait between console warnings that occur before the final timeout.</dd>
+	<dt>warningMillis: número = 1000</dt>
+	<dd>Número de milisegundos a esperar entre alertas na consola até que o <em>timeout</em> ocorra.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
 ## setMountMaxTime
 
 ```js
-// After three seconds, show a console warning while continuing to wait.
+// Depois de três segundos, mostrar uma alerta na consola enquando continua à espera
 singleSpa.setMountMaxTime(3000);
 
-// After three seconds, move the application to SKIP_BECAUSE_BROKEN status.
+// Depois de três segundos, alterar o estado da app para SKIP_BECAUSE_BROKEN
 singleSpa.setMountMaxTime(3000, true);
 
-// don't do a console warning for slow lifecycles until 10 seconds have elapsed
+// Não dar alerta na consola para lifecycles lentos até pelo menos 10 segundos terem passado
 singleSpa.setMountMaxTime(3000, true, 10000);
 ```
 
-Sets the global configuration for mount timeouts.
+Define a configuração global para <em>timeouts</em> de <em>mount</em>
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
-	<dt>millis: number</dt>
-	<dd>Number of milliseconds to wait for mount to complete before timing out.</dd>
+	<dt>millis: número</dt>
+	<dd>Número de milisegundos a esperar para o <em>mount</em> acabare antes de fazer <em>timeout</em>.</dd>
 	<dt>dieOnTimeout: boolean = false</dt>
 	<dd>
-		<p>If false, registered applications that are slowing things down will cause nothing more than some warnings in the console up until <code>millis</code> is reached.</p>
-		<p>If true, registered applications that are slowing things down will be siloed into a SKIP_BECAUSE_BROKEN status where they will never again be given the chance to break everything.</p>
-		<p>Each registered application can override this behavior for itself.</p>
+		<p>Se <em>false</em>, apps registadas que estão a causar atrasos irão apenas emitir alertas para a consola até chegar a <code>millis</code></p>
+		<p>Se <em>true</em>, apps registadas que estão a causar atrasos serão isoladas num estado SKIP_BECAUSE_BROKEN onde não terão mais oportunidade de quebrar o que seja.</p>
+		<p>Cada app registada pode fazer <em>override</em> deste comportamente de forma individual.</p>
 	</dd>
-	<dt>warningMillis: number = 1000</dt>
-	<dd>Number of milliseconds to wait between console warnings that occur before the final timeout.</dd>
+	<dt>warningMillis: número = 1000</dt>
+	<dd>Número de milisegundos a esperar entre alertas na consola até que o <em>timeout</em> ocorra.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
 ## setUnmountMaxTime
 
 ```js
-// After three seconds, show a console warning while continuing to wait.
+// Depois de três segundos, mostrar uma alerta na consola enquando continua à espera
 singleSpa.setUnmountMaxTime(3000);
 
-// After three seconds, move the application to SKIP_BECAUSE_BROKEN status.
+// Depois de três segundos, alterar o estado da app para SKIP_BECAUSE_BROKEN
 singleSpa.setUnmountMaxTime(3000, true);
 
-// don't do a console warning for slow lifecycles until 10 seconds have elapsed
+// Não dar alerta na consola para lifecycles lentos até pelo menos 10 segundos terem passado
 singleSpa.setUnmountMaxTime(3000, true, 10000);
 ```
 
-Sets the global configuration for unmount timeouts.
+Define a configuração global para <em>timeouts</em> de <em>unmount</em>
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
-	<dt>millis: number</dt>
-	<dd>Number of milliseconds to wait for unmount to complete before timing out.</dd>
+	<dt>millis: número</dt>
+	<dd>Número de milisegundos a esperar para o <em>unmount</em> acabare antes de fazer <em>timeout</em>.</dd>
 	<dt>dieOnTimeout: boolean = false</dt>
 	<dd>
-		<p>If false, registered applications that are slowing things down will cause nothing more than some warnings in the console up until <code>millis</code> is reached.</p>
-		<p>If true, registered applications that are slowing things down will be siloed into a SKIP_BECAUSE_BROKEN status where they will never again be given the chance to break everything.</p>
-		<p>Each registered application can override this behavior for itself.</p>
+		<p>Se <em>false</em>, apps registadas que estão a causar atrasos irão apenas emitir alertas para a consola até chegar a <code>millis</code></p>
+		<p>Se <em>true</em>, apps registadas que estão a causar atrasos serão isoladas num estado SKIP_BECAUSE_BROKEN onde não terão mais oportunidade de quebrar o que seja.</p>
+		<p>Cada app registada pode fazer <em>override</em> deste comportamente de forma individual.</p>
 	</dd>
-	<dt>warningMillis: number = 1000</dt>
-	<dd>Number of milliseconds to wait between console warnings that occur before the final timeout.</dd>
+	<dt>warningMillis: número = 1000</dt>
+	<dd>Número de milisegundos a esperar entre alertas na consola até que o <em>timeout</em> ocorra.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
@@ -500,40 +499,40 @@ Sets the global configuration for unmount timeouts.
 ## setUnloadMaxTime
 
 ```js
-// After three seconds, show a console warning while continuing to wait.
+// Depois de três segundos, mostrar uma alerta na consola enquando continua à espera
 singleSpa.setUnloadMaxTime(3000);
 
-// After three seconds, move the application to SKIP_BECAUSE_BROKEN status.
+// Depois de três segundos, alterar o estado da app para SKIP_BECAUSE_BROKEN
 singleSpa.setUnloadMaxTime(3000, true);
 
-// don't do a console warning for slow lifecycles until 10 seconds have elapsed
+// Não dar alerta na consola para lifecycles lentos até pelo menos 10 segundos terem passado
 singleSpa.setUnloadMaxTime(3000, true, 10000);
 ```
 
-Sets the global configuration for unload timeouts.
+Define a configuração global para <em>timeouts</em> de <em>unload</em>
 
-<h3>arguments</h3>
+<h3>argumentos</h3>
 
 <dl className="args-list">
-	<dt>millis: number</dt>
-	<dd>Number of milliseconds to wait for unload to complete before timing out.</dd>
+	<dt>millis: número</dt>
+	<dd>Número de milisegundos a esperar para o <em>unload</em> acabare antes de fazer <em>timeout</em>.</dd>
 	<dt>dieOnTimeout: boolean = false</dt>
 	<dd>
-		<p>If false, registered applications that are slowing things down will cause nothing more than some warnings in the console up until <code>millis</code> is reached.</p>
-		<p>If true, registered applications that are slowing things down will be siloed into a SKIP_BECAUSE_BROKEN status where they will never again be given the chance to break everything.</p>
-		<p>Each registered application can override this behavior for itself.</p>
+		<p>Se <em>false</em>, apps registadas que estão a causar atrasos irão apenas emitir alertas para a consola até chegar a <code>millis</code></p>
+		<p>Se <em>true</em>, apps registadas que estão a causar atrasos serão isoladas num estado SKIP_BECAUSE_BROKEN onde não terão mais oportunidade de quebrar o que seja.</p>
+		<p>Cada app registada pode fazer <em>override</em> deste comportamente de forma individual.</p>
 	</dd>
-	<dt>warningMillis: number = 1000</dt>
-	<dd>Number of milliseconds to wait between console warnings that occur before the final timeout.</dd>
+	<dt>warningMillis: número = 1000</dt>
+	<dd>Número de milisegundos a esperar entre alertas na consola até que o <em>timeout</em> ocorra.</dd>
 </dl>
 
-<h3>returns</h3>
+<h3>retorna</h3>
 
 `undefined`
 
 # Events
 
-All of the following are [custom events](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent) fired by single-spa on the window. The event `detail` property contains the native DOM event that triggered the reroute, such as a [PopStateEvent](https://developer.mozilla.org/en-US/docs/Web/API/PopStateEvent) or [HashChangeEvent](https://developer.mozilla.org/en-US/docs/Web/API/HashChangeEvent). These events can be handled by using [`addEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), like so:
+Todos os seguintes são [_custom events_](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent) disparados pelo single-spa na _window_. A propriedade do evento `detail` contem o evento DOM nativo que disparou o _reroute_, tal como um [PopStateEvent](https://developer.mozilla.org/en-US/docs/Web/API/PopStateEvent) ou [HashChangeEvent](https://developer.mozilla.org/en-US/docs/Web/API/HashChangeEvent). Estes eventos podem ser geridos usando [`addEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), tal como:
 
 <!-- TODO: are these events augmented like the addErrorHandler Error is? -->
 
@@ -552,7 +551,7 @@ window.addEventListener('single-spa:before-routing-event', () => {
 });
 ```
 
-A `single-spa:before-routing-event` event is fired before every routing event occurs, which is after each hashchange, popstate, or triggerAppChange, even if no changes to registered applications were necessary.
+Um evento `single-spa:before-routing-event` é disparado antes de cada evento de _routing_ ocorrer, que é antes de cada _hashchange_, _popstate_, ou _triggerAppChange_, mesmo que nenhuma alteração a apps registadas seja necessária.
 
 ## routing event
 
@@ -562,7 +561,7 @@ window.addEventListener('single-spa:routing-event', () => {
 });
 ```
 
-A `single-spa:routing-event` event is fired every time that a routing event has occurred, which is after each hashchange, popstate, or triggerAppChange, even if no changes to registered applications were necessary; and after single-spa verified that all apps were correctly loaded, bootstrapped, mounted, and unmounted.
+Um evento `single-spa:routing-event` é disparado cada vez que um evento de _routing_ ocorra, que é depois de cada _hashchange_, _popstate_, ou _triggerAppChange_, mesmo que nenhuma alteração a apps registadas tenha sido necessára; e depois de o single-spa verificar que as apps passaram com sucesso por _loaded_, _bootstrapped_, _mounted_ e _unmounted_.
 
 ## app-change event
 
@@ -572,7 +571,7 @@ window.addEventListener('single-spa:app-change', () => {
 });
 ```
 
-A `single-spa:app-change` event is fired every time that one or more apps were loaded, bootstrapped, mounted, unmounted, or unloaded. It is similar to `single-spa:routing-event` except that it will not fire unless one or more apps were actually loaded, bootstrapped, mounted, or unmounted. A hashchange, popstate, or triggerAppChange that does not result in one of those changes will not cause the event to be fired.
+Um evento `single-spa:app-change` é disparado cada vez que uma ou mais apps forem _loaded_, _bootstrapped_, _mounted_, _unmounted_, ou _unloaded_. É semelhante ao `single-spa:routing-event` exceto que não será disparado a não ser que uma ou mais apps tenham efetivamente passado por _loaded_, _bootstrapped_, _mounted_ ou _unmounted_. Um _hashchange_, _popstate_, ou _triggerAppChange_ que não resulte numa destas alterações não irá fazer com que o evento seja disparado.
 
 ## no-app-change event
 
@@ -582,9 +581,9 @@ window.addEventListener('single-spa:no-app-change', () => {
 });
 ```
 
-When no applications were loaded, bootstrapped, mounted, unmounted, or unloaded, single-spa fires a `single-spa:no-app-change` event. This is the inverse of the `single-spa:app-change` event. Only one will be fired for each routing event.
+Quuando nenhuma aplicação tenha feito _loaded_, _bootstrapped_, _mounted_, _unmounted_ ou _unloaded_, o single-spa dispara o evento `single-spa:no-app-change`. Isto é o inverso do evento `single-spa:app-change`. Apenas um será disparado para cada evento de _routing_.
 
-## before-first-mount	
+## before-first-mount
 
 ```js
 window.addEventListener('single-spa:before-first-mount', () => {
@@ -592,9 +591,9 @@ window.addEventListener('single-spa:before-first-mount', () => {
 });
 ```
 
-Before the first of any single-spa applications is mounted, single-spa fires a `single-spa:before-first-mount` event; therefore it will only be fired once ever. More specifically, it fires after the application is already loaded but before mounting.
+Antes que a primeira de qualquer app seja montada, o single-spa dispara o evento `single-spa:before-first-mount`; portanto será apenas disparado uma vez. Mais especificamente, é acionado após a app já estar _loaded_ mas antes de a montar.
 
-> **Suggested use case:** remove a loader bar that the user is seeing right before the first app will be mounted.
+> **Caso de uso sugerido:** remover um indicador de loading que o user vê antes da primeira app ser montada.
 
 ## first-mount
 
@@ -604,6 +603,6 @@ window.addEventListener('single-spa:first-mount', () => {
 });
 ```
 
-After the first of any single-spa applications is mounted, single-spa fires a `single-spa:first-mount` event; therefore it will only be fired once ever.
+Depois da primeira de qualquer uma das apps ser montada, o single spa dispara o evento `single-spa:first-mount`; portanto será apenas disparado uma vez.
 
-> **Suggested use case:** log the time it took before the user sees any of the apps mounted.
+> **Caso de uso sugerido:** registar o tempo que demorou até o utilizador ver qualquer uma das outras apps montada.

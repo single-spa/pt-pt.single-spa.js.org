@@ -1,130 +1,134 @@
 ---
 id: faq
-title: Frequently Asked Questions
-sidebar_label: FAQ
+title: Perguntas Frequentes
+sidebar_label: Perguntas Frequentes
 ---
 
-## What does single-spa do?
-single-spa is a top level router. When a route is active, it downloads and executes the code for that route.
+## O que é que o single-spa faz?
+single-spa é um _top level router_. Quando uma route está ativa, este descarrega e executa o código dessa route.
 
-The code for a route is called an "application", and each can (optionally) be in its own git repository, have its own CI process, and be separately deployed.
-The applications can all be written in the same framework, or they can be implemented in different frameworks.
+O código para a route é chamado de aplicação e cada pode (opcionalmente) estar no seu próprio repositório Git, ter o seu próprio processo de CI e ser _deployed_ separadamente.
+As aplicações podem ser todas implementadas na mesma _framework_ ou em _frameworks_ diferentes.
 
-## Is there a recommended setup?
-Yes, here is [the documentation for our recommended setup](/docs/recommended-setup/).
+## Existe um _setup_ recomendado?
+Sim, aqui está a [documentação para o nosso setup recomendado](/docs/recommended-setup/).
 
-## Should I have a parent/root app and children apps?
-No. We strongly encourage that your single-spa-config or root application does not use any javascript ui-frameworks (React, Angular, Angularjs, Vue, etc). In our experience a plain javascript module is best for the single-spa-config and only the registered applications actually use ui-frameworks (angular, react, vue, etc). 
+## Devo ter uma app _root_ e apps _children_?
+Não. Nós encorajamos fortemente que a sua app _single-spa-config_ ou _root_ não use qualquer framework de Javascript (React, Angular, Angularjs, Vue, etc). Na nossa experiência um simples módulo de Javasript é melhor para o _single-spa-config_ e apenas as aplicações registadas efetivamente usam uma _framework_ (Angular, React, Vue, etc).
 
-Why? You end up creating a structure that has all the disadvantages of microservices without any of the advantages: your apps are now coupled together and you have to change multiple apps at the same time in order to make updates. Good microservices are completely **independent**, and this pattern breaks that.
+Porque? Acaba por criar uma estrutura com todas as desvantagens dos microsserviços sem qualquer uma das vantagens: as suas apps estão agora acopladas e precisa atuaçizar várias apps ao mesmo tempo para fazer updates. Bons microsserviços são totalmente **independentes** e este padrão quebra essa regra.
 
-## What is the impact to performance?
-When setup in the [recommended way](#is-there-a-recommended-setup), your code performance and bundle size will be nearly identical to a single application that has been code-split. The major differences will be the addition of the single-spa library (and SystemJS if you chose to use it). Other differences mainly come down to the difference between one (webpack / rollup / etc.) code bundle and in-browser ES modules.
+## Qual é o impacto na performace?
+Quando o setup é feito da [forma recomendada](#is-there-a-recommended-setup), a performance do código e _bundle size_ são quase idênticos a uma aplicação única com _code-split_. As principais diferenças serão a adição da biblioteca do _single-spa_ (e SystemJS se decidir usar). Outras diferenças resumem-se principalmente à diferença entre um _bundle_ (webpack / rollup / etc.) e módulos ES no browser.
 
-## Can I have only one version of (React, Vue, Angular, etc.) loaded?
-Yes, and it's highly recommended you do so! Using [the recommended setup](#is-there-a-recommended-setup), you configure your [import map](#what-are-import-maps) so that your library is defined only once. Then, tell each application to _not_ bundle that library; instead, the library will given to you at runtime in the browser. See [webpack’s externals](https://webpack.js.org/configuration/externals/) (and other bundlers have similar options) for how to do this.
+## Posso carregar apenas ter uma versão carregada (React, Vue, Angular, etc.)?
+Sim e é altamente recomendado que o faça! Usando o [setup recomendado](#is-there-a-recommended-setup), configure o seu _[import-map](#what-are-import-maps)_ de forma a que a sua biblioteca seja definida apenas uma vez. Depois, indique a cada app para _não_ fazer _bundle_ dessa biblioteca; em vez disso, a biblioteca será fornecida em _runtime_ pelo _browser_. Veja como fazer em _[webpack’s externals](https://webpack.js.org/configuration/externals/)_ (outros _bundlers_ têm opções semelhantes).
 
-You do have the option of _not_ excluding those libraries (for example if you want to experiment with a newer version or a different library) but be aware of the effect that will have on user's bundle sizes and application speed.
+Têm de adicionar a opção de _não_ excluir essas bibliotecas (por exemplo, se quiser experimentar uma versão mais recente ou uma biblioteca diferente), mas esteja ciente do efeito que isso terá sobre os tamanho do _bundle_ no _user_ e a velocidade da app.
 
-## What are import maps?
-[Import maps](https://github.com/WICG/import-maps) improve the developer experience of in-browser ES modules by allowing you to write something like `import React from "react"` instead of needing to use an absolute or relative URL for your import statement. The same is also true of importing from other single-spa applications, e.g. `import {MyButton} from "styleguide"`. The import-map spec is currently in the process of being accepted as a web standard and at the time of writing has been [implemented in Chrome](https://developers.google.com/web/updates/2019/03/kv-storage#import_maps), and a polyfill for browsers >= IE11 has been implemented by [SystemJS >= 3.0](https://github.com/systemjs/systemjs). Also see [the recommended setup](#is-there-a-recommended-setup)
+## O que são import maps?
+[Import maps](https://github.com/WICG/import-maps) melhoram a experiência do _developer_ com módulos ES no _browser_ permitindo-lhe escrever algo como `import React from "react"` em vez de precisar de usar um URL absoluto ou relativo para as importações. O mesmo também é verdade ao importar de outras aplicações registadas com o _single-spa_, ex. `import {MyButton} from "styleguide"`. A especificação do _import-map_ encontra-se neste momento em fase de aceitação enquanto _standard_ da _web_ e no momento da escriva foi [implementada no Chrome](https://developers.google.com/web/updates/2019/03/kv-storage#import_maps), e um _polyfill_ para _browsers_ <= IE11 foi implementada no [SystemJS >= 3.0](https://github.com/systemjs/systemjs). Ver também o [setup recomendado](#is-there-a-recommended-setup).
 
-## How can I share application state between applications?
-In general, we recommend trying to avoid this — it couples those apps together. If you find yourself doing this frequently between apps, you may want to consider that those separate apps should actually just be one app.
+## Como posso partilhar o estado entre aplicações?
+No geral, recomendamos evitar isto - as aplicações ficam demasiado dependentes. Se você faz isso com frequência entre apps, considere em juntar essas apps separadas numa só app.
 
-Generally, it’s better to just make an API request for the data that each app needs, even if parts of it have been requested by other apps. In practice, if you’ve designed your application boundaries correctly, there will end up being very little application state that is truly shared — for example, your friends list has different data requirements than your social feed.
+Geralmente, é melhor fazer um pedido API para os dados que cada app precisa, mesmo que partes tenham sido pedidos por outras apps. Na prática, se desenhou corretamente os limites das aplicações, acabará por haver muitos poucos estados que sejam efetivamente partilhados — por exemplo, a sua lista de amigos tem requisitos diferentes do seu _feed_ social.
 
-However, that doesn’t mean it can’t be done. Here are several ways:
-1. Create a shared API request library that can cache requests and their responses. If somone hits an API, and then that API is hit again by another application, it just uses the cache
-1. Expose the shared state as an export, and other libraries can import it. Observables (like [RxJS](https://rxjs-dev.firebaseapp.com/)) are useful here since they can stream new values to subscribers
-1. Use [custom browser events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events#Creating_custom_events) to communicate
-1. Use [cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies), [local/session storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), or other similar methods for storing and reading that state. These methods work best with things that don't change often, e.g. logged-in user info.
+No entando, não quer dizer que não possa ser feito. Aqui estão alguas formas:
+1. Crie uma biblioteca de pedidos de API partilhada e cacheie os pedidos e respostas. Se uma app requisitar a API e depois essa API é requisitada por outra app, pode apenas usar a cache
+1. Exponha o estado partilhado como um _export_ e deixe as outras aplicações importá-lo. Observáveis (como [RxJS](https://rxjs-dev.firebaseapp.com/)) são úteis visto que podem fazer _stream_ de novos dados aos _subscribers_
+1. Use [custom browser events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events#Creating_custom_events) para comunicar
+1. Use [cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies), [local/session storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), ou outros métodos semelhantes para guardar e ler estados. Estes métodos funcionam melhor quando as coisas não mudam frequentemente, ex. a info do utilizador logado.
 
-**Please note that this is just talking about sharing application state: sharing functions, components, etc. is as easy as an `export` in one project and an `import` in the other. See [import map](#what-are-import-maps) documentation for more details**
+**Por favor note que isto é apenas quando à partilha de estados entre apps. Partilhas funções, componentes, etc é tão fácil como um `export` num projeto e um `import` noutro. Ver a documentação do _[import map](#what-are-import-maps)_ para mais detalhes**
 
-## Should I use frontend microservices?
-If you’ve ran into some of the headaches a monolithic repo has, then you should really consider it.
+## Devo usar microsserviços no frontend?
+Se você se deparou com algumas das dores de cabeça de um repo monolítico, deve realmente considerá-lo.
 
-In addition, if your organization is setup in a Spotify-type model (e.g. where there are autonomous squads that own full-stack features) then microservices on the frontend will fit very well into your setup.
+Para mais, se sua organização estiver configurada num modelo estilo Spotify (por exemplo, onde existem equipas autónomas que são donas de _features full-stack_), os microsserviços no frontend irão encaixar-se muito bem na sua configuração.
 
-However, if you’re just starting off and have a small project or a small team, we would recommend you stick with a monolith (i.e. not microservices) until you get to the point that scaling (e.g. organizational scaling, feature scaling, etc.) is getting hard. Don’t worry, we’ll be here to help you migrate when you get there.
+No entanto, se estier apenas a começar e tem um projeto ou equipa pequenos, recomendamos que fique com um monólito (i.e. não microsserviços no frontend) até que chegue ao ponto que _scaling_ (ex. scaling organizational, scaling de _features_, etc.) se torne difícil. Não se preocupe, estaremos cá para o ajudar a migrar quando for preciso.
 
-## Can I use more than one framework?
-Yes. However, it’s something you’ll want to consider hard because it splits your front-end organization into specialities that aren’t compatible (e.g. a React specialist may have problems working in an Angular app), and also causes more code to be shipped to your users.
+## Posso usar mais que uma _framework_?
+Sim. No entanto, é algo que deve sériamente ser considerdo porque divide sua organização de frontend em especialidades incompatíveis (por exemplo, um especialista em React pode ter problemas ao trabalhar em uma app em Angular) e também faz com que mais código seja enviado para o user.
 
-However, it is great for migrations _away_ from an older or unwanted library, which allows you to slowly rip out the code in the old application and replace it with new code in the new library (see Google results for [the strangler pattern](https://www.google.com/search?q=the+strangler+pattern&oq=the+strangler+pattern)).
+No entanto, é ótimo para migrar de uma biblioteca mais antiga ou já não desejada, o que permite extrair lentamente o código na app antiga e substituí-lo por código novo na nova biblioteca (ver resultados no Google para _[the strangler pattern](https://www.google.com/search?q=the+strangler+pattern&oq=the+strangler+pattern)_).
 
-It also is a way to allow large organizations to experiment on different libraries without a strong commitment to them.
+Também é uma forma de permitir que organizações maiores experimentem diferentes bibliotecas sem se comprometerem fortemente com elas.
 
-**Just be conscious of the effect it has on your users and their experience using your app.**
+**Simplesmente esteja consciente do efeito nos seus users e a sua experiência ao usar a sua app.**
 
-## What is the developer experience (DX) like?
-If you're using the [recommended setup](#is-there-a-recommended-setup) for single-spa, you'll simply be able to go to your development website, add an import map that points to your locally-running code, and refresh the page.
+## Como é a experiência do desenvolvedor?
+Se estiver a usar a [configuração recomendada] (#is-there-a-recommended-setup) para o single-spa, basta aceder ao _link_ de desenvolvimento, adicionar um _import-map_ a apontar para o URL da sua instância local e fazer refresh à página.
 
-There's a [library](https://github.com/joeldenning/import-map-overrides) that you can use, or you can even just do it yourself - you'll note that the source code is pretty simple. The main takeaway is that you can have multiple [import maps](#what-are-import-maps) and the latest one wins - you add an import map that overrides the default URL for an application to point to your localhost.
+Existe uma [biblioteca](https://github.com/joeldenning/import-map-overrides) que você pode usar ou até mesmo fazer a sua própria - vai ver que o código fonte é bastante simples.
 
-We're also looking at providing this functionality as part of the [Chrome/Firefox browser extension](https://github.com/single-spa/single-spa-inspector).
+A ideia principal é que pode ter vários _[import-maps] (# what-are-import-maps)_ e que o último é o que é escolhido - você adiciona um _import-map_ que substitui o URL _default_ com o de uma app do seu _local host_.
 
-Finally, this setup also enables you to do overrides _in your production environment_. It obviously should be used with caution, but it does enable a powerful way of debugging problems and validating solutions.
+Também queremos fornecer essa funcionalidade como uma [extensão para o Chrome/Firefox](https://github.com/single-spa/single-spa-inspector).
 
-As a point of reference, nearly all developers we've worked with **prefer the developer experience of microservices + single-spa** over a monolithic setup.
+Por fim, esta configuração também permite fazer substituições _no ambiente de produção_. Obviamente deve ser usado com cautela, mas permite ter uma forma poderosa de fazer _debug_ de problemas e validar soluções.
 
-## Can each single-spa application have its own git repo?
-Yes! You can even give them their own package.json, webpack config, and CI/CD process, using SystemJS to bring them all together in the browser.
+Como ponto de referência, quase todos os desenvolvedores com quem trabalhamos **preferem a experiência de desenvolvedor de microsserviços + single-spa** em vez de um setup monolítico.
 
-## Can single-spa applications be deployed independently?
-Yes! See next section about CI/CD.
+## Cada app single-spa pode ter o seu próprio repo Git?
+Sim! E até pode dar-lhes o seu próprio package.json, configuração _webpack_, e processo de CI/CD, usando o _SystemJS_ para as reunir todas no _browser_.
 
-## What does the CI/CD process look like?
-In other words, how do I build and deploy a single-spa application?
+## Ass apps single-spa podem ser _deployed_ independentemente?
+Sim! Veja a próxima secção sobre CI/CD.
 
-With the [recommended setup](#is-there-a-recommended-setup), the process generally flows like this:
-1. Bundle your code and upload it to a CDN.
-1. Update your dev environment's import map to point to the that new URL. In other words, your import map used to say `"styleguide": "cdn.com/styleguide/v1.js"` and now it should say `"styleguide": "cdn.com/styleguide/v2.js"`
+## Como é o processo de CI/CD?
+Por outras palavras, como faço para criar e fazer deploy de uma app single-spa?
 
-Some options on _how_ to update your import map include:
-* Server render your `index.html` with the import map inlined. This does not mean that your DOM elements need to all be server rendered, but just the `<script type="systemjs-importmap>` element. Provide an API that either updates a database table or a file local to the server.
-* Have your import map itself on a CDN, and use [import-map-deployer](https://github.com/single-spa/import-map-deployer) or similar to update the import map during your CI process. This method has a small impact on performance, but is generally easier to setup if you don't have a server-rendered setup already. (You can also [preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content) the import map file to help provide a small speed boost). See [example travis.yml](https://github.com/openmrs/openmrs-esm-root-config/blob/master/.travis.yml). Other CI tools work, too.
+Com o [setup recomendado](#is-there-a-recommended-setup), o processo geralmetne segue um flow como este:
+1. Faça _bundle_ do código e _upload_ para um CDN.
+1. Faça update do seu _import-map_ no ambiente de dev para apontar para o novo URL. Isto é, o seu _import-map_ continha `"styleguide": "cdn.com/styleguide/v1.js"` e agora deverá conter `"styleguide": "cdn.com/styleguide/v2.js"`
 
-## Create React App
-Currently Create React App (CRA) requires [ejecting](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject) or [using a tool](https://github.com/timarney/react-app-rewired/blob/master/README.md) to modify the webpack config.  You can also consider some of the [popular alternatives to CRA](https://github.com/facebook/create-react-app#popular-alternatives).
+Algumas opções de como fazer _update_ ao seu _import-map_ includem:
+* Fazer _server rendering_ do seu `index.html` com o _import-map_ _inlined_. Isto não quer dizer que os elementos da DOM precisem de ser todos _server rendered_, apenas o elemento `<script type="systemjs-importmap>`. Forneça uma API que ou atualiza a tabela da base de dados ou um ficheiro local no servidor. 
+* Ponha o próprio _import-map_ num CND e use o [import-map-deployer](https://github.com/single-spa/import-map-deployer) ou semelhante para atualizar o _import-map_ durante o processo de CI. (Também pode fazer [preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content) to ficheiro _import-map_ para uma pequena melhoria de velocidade). Ver o [exemplo travis.yml](https://github.com/openmrs/openmrs-esm-root-config/blob/master/.travis.yml). Outras ferramentas de CI também funcionam.
 
-When you use the [recommended setup](#is-there-a-recommended-setup) the following things need to change (as of CRA v3.0.1):
+## Criar uma App de React
+Presentemente, Create React App (CRA) requere [ejetar](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject) ou [usar uma ferramenta](https://github.com/timarney/react-app-rewired/blob/master/README.md) para modificar a configuração do _webpack_. Também pode considerar algumas das [alternativas populares ao CRA](https://github.com/facebook/create-react-app#popular-alternatives).
 
-1. Remove Webpack optimizations block, because they add multiple webpack chunks that don't load each other
-1. Remove html-webpack plugin
-1. Change [`output.libraryTarget`](https://webpack.js.org/configuration/output/#outputlibrarytarget) to `System`, `UMD`, or `AMD`.
+Quando usa o [setup recomendado](#is-there-a-recommended-setup), as seguintes coisas precisam ser alteradas (a partir do CRA v3.0.1):
 
-CRA does not allow you to change those items without ejecting or using another tool.
+1. Remover blocos de optimização do _webpack_, porque adicionam vários chunks de _webpack_ que não se carregam entre elas
+1. Remover o _plugin html-webpack_
+1. Mudar [`output.libraryTarget`](https://webpack.js.org/configuration/output/#outputlibrarytarget) para `System`, `UMD`, ou `AMD`.
 
-## Code splits
-Single spa supports code splits. There are so many ways to code split we won't be able to cover them all, but if you're using the [recommended setup](#is-there-a-recommended-setup) with webpack you'll need to do at least two things:
+O CRA não lhe permite alterar esses itens sem ejetar ou usar outra ferramenta.
 
-1. Set the [`__webpack_public_path__`](https://webpack.js.org/guides/public-path/#on-the-fly) dynamically so webpack knows where to fetch your code splits (webpack assumes they are located at the root of the server and that isn't always true in a single-spa application). Both solutions below should be the very first import of your application in order to work.
-    * For SystemJS >= 6, use [systemjs-webpack-interop](https://github.com/joeldenning/systemjs-webpack-interop):
+## _Code splits_
+Single-spa suporta _code splits_. Existem tantas formas de fazer _code split_ que não somos capazes de cobrir todas as formas, mas se estiver a usar o [setup recomendado](#is-there-a-recommended-setup) com _webpack_ deverá fazer pelo menos duas coisas:
+
+1. Defina o [`__webpack_public_path__`](https://webpack.js.org/guides/public-path/#on-the-fly) dinamicamente para que o _webpack_ saiba onde buscar os seus _code splits_ (o _webpack_ assume que estes se encontram na raiz do servidor e isso nem sempre é verdade numa app de single-spa). Ambas as soluções abaixo devem ser o primeiro _import_ da sua aplicação de forma a funcionar.
+    * Para SystemJS >= 6, use [systemjs-webpack-interop](https://github.com/joeldenning/systemjs-webpack-interop):
     ```js
     import { setPublicPath } from 'systemjs-webpack-interop';
 
     setPublicPath('name-of-module-in-import-map');
     ```
 
-    * For SystemJS 2-5: Find a code example [here](https://gitlab.com/TheMcMurder/single-spa-portal-example/blob/master/people/src/set-public-path.js#L3)
-1. Set either [`output.jsonpFunction`](https://webpack.js.org/configuration/output/#outputjsonpfunction) or [`output.library`](https://webpack.js.org/configuration/output/#outputlibrary) to ensure that each app's webpack doesn't collide with other apps' webpack. `jsonpFunction` is preferred.
+    * Para SystemJS 2-5: veja um exemplo do código [aqui](https://gitlab.com/TheMcMurder/single-spa-portal-example/blob/master/people/src/set-public-path.js#L3)
 
-For more information about webpack configuration and single-spa, see [the recommended setup](/docs/recommended-setup#build-tools-webpack--rollup).
+1. Defina tanto o [`output.jsonpFunction`](https://webpack.js.org/configuration/output/#outputjsonpfunction) ou o [`output.library`](https://webpack.js.org/configuration/output/#outputlibrary) para garantir que o _webpack_ de cada app não colide com o _webpack_ de outras apps. É preferido o `jsonpFunction`.
 
-## Does single-spa require additional security considerations?
+Para obter mais informações sobre a configuração do webpack e o single-spa, veja o  [setup recomendado](/docs/recommended-setup#build-tools-webpack--rollup)
 
-No. single-spa does not add, deviate, or attempt to bypass any browser JavaScript security measures. The security needs of your applications are the same as if you did not use single-spa.
 
-Outside of that, web applications may use the following resources that have their own security considerations that you may need to become familiar with:
+## O single-spa requere considerações de segurança adicionais?
+Não. O single-spa não adiciona, desvia ou tenta ignorar nenhuma medida de segurança JavaScript no browser. As necessidades de segurança das suas apps são as mesmas de se não estivesse a usar o single-spa.
+
+Fora isso, as webapps podem usar os seguintes recursos os quais tem as suas próprias considerações de segurança com as quais você pode ter de se familiarizar:
+
 
 - [ES6 module dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
-  - Webpack-based applications use [Webpack's implementation of dynamic imports](https://webpack.js.org/guides/code-splitting/#dynamic-imports)
+  - Apps baseadas em _webpack_ usam a [implementação de imports dinâmicos do webpack](https://webpack.js.org/guides/code-splitting/#dynamic-imports)
 - [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 - [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#Threats)
-  - module imports specifically relate to [CSP `script-src`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src)
+  - import de módulos relaciona-se especificamente com [CSP `script-src`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src)
 - [Subresource Integrity (SRI)](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity#How_Subresource_Integrity_helps)
-  - See also [import-maps script “integrity” attribute](https://github.com/WICG/import-maps/issues/174)
-- Import-maps are also governed by CSP
-  - See also ["Supplying out-of-band metadata for each module"](https://github.com/WICG/import-maps/blb/master/README.md#supplying-out-of-band-metadata-for-each-module)
+  - Ver também [import-maps script “integrity” attribute](https://github.com/WICG/import-maps/issues/174)
+- _Import-maps_ também são governados pelo CSP
+  - Ver também ["Supplying out-of-band metadata for each module"](https://github.com/WICG/import-maps/blb/master/README.md#supplying-out-of-band-metadata-for-each-module)
