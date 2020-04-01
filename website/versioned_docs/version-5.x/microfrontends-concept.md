@@ -10,7 +10,7 @@ Tutorial video: [Youtube](https://www.youtube.com/watch?v=3EUfbnHi6Wg&list=PLLUD
 
 A microfrontend is a microservice that exists within a browser.
 
-Microfrontends are sections of your UI, often consisting of dozens of components and use frameworks like React, Vue, and Angular to render their components. Each microfrontend can be managed by a different team, and may choose its own framework. It is practical and suggested to use just one framework for all your microfrontends, although you may add additional framework when migrating or when experimenting.
+Microfrontends are sections of your UI, often consisting of dozens of components, that use frameworks like React, Vue, and Angular to render their components. Each microfrontend can be managed by a different team, and may choose its own framework. It is practical and suggested to use just one framework for all your microfrontends, although you may add additional framework when migrating or when experimenting.
 
 Each microfrontend has its own git repository, its own package.json, and its own build tool configuration. As a result, each microfrontend has **an independent build process** and **an independent deploy / CI**. This generally means that each repo has fast build times.
 
@@ -18,7 +18,7 @@ Each microfrontend has its own git repository, its own package.json, and its own
 
 Microservices are backend services that run in their own operating system process, control their own databases, and communicate with each other over the network.
 
-Compare that to microfrontends that all exist within a single tab: all browser javascript within a tab exists in a single operating system process (and even thread!). Browser javascript generally does not directly access databases, and communication within a browser tab happens in-memory instead of over the network.
+Compare that to microfrontends that all exist within a single browser tab: all browser javascript within a tab exists in a single operating system process (and even thread!). Browser javascript generally does not directly access databases, and communication within a browser tab happens in-memory instead of over the network.
 
 So what do they have in common???
 
@@ -40,7 +40,7 @@ A web app may include one or more types of microfrontends. See [an in-depth comp
 
 ## Communication between Microfrontends
 
-`import { thing } from 'other-microfrontend` is the preferred way to communicate between microfrontends. [Here is some documentation](/docs/recommended-setup#inter-app-communication) that goes over this in more detail.
+`import { thing } from 'other-microfrontend'` is the preferred way to communicate between microfrontends. [Here is some documentation](/docs/recommended-setup#inter-app-communication) that goes over this in more detail.
 
 ## Relationship to single-spa
 
@@ -48,4 +48,4 @@ single-spa is a small, 5kb (gzipped) npm package that orchestrates the mounting 
 
 ## Performance
 
-Microfrontends often are more performant than the monoliths from which they originate. This is due to built-in lazy loading (via [loading functions](/docs/api/#registerapplication)) and other performance-related best practices. Your monolith likely has "skeletons in its closet" - microfrontends gives you a migration path that will expose and resolve the problems caused by those skeletons. One important performance consideration is to share a single instance of large libraries (such as React, Vue, or Angular) is highly encouraged. To do so, see our [recommended setup](/docs/recommended-setup#shared-dependencies).
+Microfrontends often are more performant than the monoliths from which they originate. This is due to built-in lazy loading (via [loading functions](/docs/api/#registerapplication)) and other performance-related best practices. Your monolith likely has "skeletons in its closet" - microfrontends gives you a migration path that will expose and resolve the problems caused by those skeletons. One important performance consideration is to share a single instance of large libraries (such as React, Vue, or Angular), which is highly encouraged. To do so, see our [recommended setup](/docs/recommended-setup#shared-dependencies).
