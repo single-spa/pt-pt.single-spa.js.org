@@ -54,7 +54,23 @@ import { setPublicPath } from 'systemjs-webpack-interop';
 setPublicPath('appName');
 ```
 
-Change your application's entry file to be the following.
+Note that if you are using the Vue CLI Plugin, your `main.ts` or `main.js` file will be updated with this code automatically and the `set-public-path.js` file
+will automatically be created with the app name being your package.json's name property.
+
+If you want to deal with your Vue instance, you can modify the mount method by following this. mount method will return Promise with Vue instance after [v1.6.0](https://github.com/single-spa/single-spa-vue/releases/tag/v1.6.0).
+
+```js
+const vueLifecycles = singleSpaVue({...})
+
+export const mount = props => vueLifecycles.mount(props).then(instance => {
+  // do what you want with the Vue instance
+  ...
+})
+```
+
+### Vue 2
+
+For Vue 2, change your application's entry file to be the following:
 
 ```js
 import './set-public-path';
@@ -78,18 +94,37 @@ export const mount = vueLifecycles.mount;
 export const unmount = vueLifecycles.unmount;
 ```
 
-Note that if you are using the Vue CLI Plugin, your `main.ts` or `main.js` file will be updated with this code automatically and the `set-public-path.js` file
-will automatically be created with the app name being your package.json's name property.
+### Vue 3
 
-If you want to deal with your Vue instance, you can modify the mount method by following this. mount method will return Promise with Vue instance after [v1.6.0](https://github.com/single-spa/single-spa-vue/releases/tag/v1.6.0).
+For Vue 3, change your application's entry file to be the following:
 
 ```js
-const vueLifecycles = singleSpaVue({...})
+import './set-public-path';
+import { h, createApp } from 'vue';
+import singleSpaVue from '../lib/single-spa-vue.js';
 
-export const mount = props => vueLifecycles.mount(props).then(instance => {
-  // do what you want with the Vue instance
-  ...
-})
+import App from './App.vue';
+
+const vueLifecycles = singleSpaVue({
+  createApp,
+  appOptions: {
+    render() {
+      return h(App, {
+        props: {
+          // single-spa props are available on the "this" object. Forward them to your component as needed.
+          // https://single-spa.js.org/docs/building-applications#lifecyle-props
+          name: this.name,
+          mountParcel: this.mountParcel,
+          singleSpa: this.singleSpa,
+        },
+      });
+    },
+  },
+});
+
+export const bootstrap = vueLifecycles.bootstrap;
+export const mount = vueLifecycles.mount;
+export const unmount = vueLifecycles.unmount;
 ```
 
 ## Custom props
