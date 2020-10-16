@@ -36,7 +36,7 @@ singleSpa.registerApplication(
 	<dd>Must be a loading function that either returns the resolved application or a promise.</dd>
 	<dt>activityFn: (location) => boolean</dt>
 	<dd>Must be a pure function. The function is called with <codehtml>window.location</codehtml> as the first argument {/* TODO: any only? */} and should return a truthy value whenever the application should be active.</dd>
-	<dt>customProps?: Object = &#123;&#125;</dt>
+	<dt>customProps?: Object | () => Object</dt>
 	<dd>Will be passed to the application during each lifecycle method.</dd>
 </dl>
 
@@ -50,7 +50,21 @@ singleSpa.registerApplication({
 	name: 'appName',
 	app: () => System.import('appName'),
 	activeWhen: '/appName'
-	customProps: {}
+	customProps: {
+		authToken: 'xc67f6as87f7s9d'
+	}
+})
+
+singleSpa.registerApplication({
+	name: 'appName',
+	app: () => System.import('appName'),
+	activeWhen: '/appName',
+	// Dynamic custom props that can change based on route
+	customProps(appName, location) {
+		return {
+			authToken: 'xc67f6as87f7s9d'
+		}
+	}
 })
 ```
 
@@ -91,7 +105,7 @@ singleSpa.registerApplication({
 			<dd>🚫 https://app.com/app2</dd>
 		</dl>
 	</dd>
-	<dt>customProps?: Object = &#123;&#125;</dt>
+	<dt>customProps?: Object | () => Object</dt>
 	<dd>Will be passed to the application during each lifecycle method.</dd>
 </dl>
 
@@ -329,9 +343,39 @@ Because a registered application might be mounted when `unloadApplication` is ca
 
 <dl className="args-list">
 	<dt>Promise</dt>
-	<dd>This promise will be resolved when the registered application has been successfully removed.</dd>
+	<dd>This promise will be resolved when the registered application has been successfully unloaded.</dd>
 </dl>
 
+## unregisterApplication
+
+```js
+import { unregisterApplication } from 'single-spa';
+
+unregisterApplication('app1').then(() => {
+	console.log('app1 is now unmounted, unloaded, and no longer registered!');
+})
+```
+
+The `unregisterApplication` function will unmount, unload, and unregister an application. Once it is no longer registered, the application will never again be mounted.
+
+This api was introduced in single-spa@5.8.0. A few notes about this api:
+
+- Unregistering an application does not delete it from the SystemJS module registry.
+- Unregistering an application does not delete its code or javascript frameworks from browser memory.
+- An alternative to unregistering applications is to perform permission checks inside of the application's activity function. This has a similar effect of preventing the application from ever mounting.
+
+<h3>arguments</h3>
+
+<dl className="args-list">
+	<dt>appName: string</dt>
+</dl>
+
+<h3>returns</h3>
+
+<dl className="args-list">
+	<dt>Promise</dt>
+	<dd>This promise will be resolved when the application has been successfully unregistered.</dd>
+</dl>
 ## checkActivityFunctions
 
 ```js
