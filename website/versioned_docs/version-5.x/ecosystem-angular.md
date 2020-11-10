@@ -742,9 +742,68 @@ The following options are available to be passed when calling `singleSpaAngularE
 
 See [options](#options) for detailed explanation.
 
-## Advanced
+## Parcels
 
-### Zone-less applications
+We encourage you to get familiar with the documentation, namely [Parcels overview](/docs/parcels-overview.md) and [Parcels API](/docs/parcels-api.md). This documentation will give you a basic understanding of what parcels are.
+
+Additionally, single-spa-angular provides a `<parcel>` component to make using framework agnostic single-spa parcels easier. This allows you to put the parcel into your component's template, instead of calling `mountRootParcel()` by yourselves.
+
+`single-spa-angular/parcel` package exports the `ParcelModule` which exports the `<parcel>` component:
+
+```ts
+// Inside of src/app/app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { ParcelModule } from 'single-spa-angular/parcel';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  imports: [BrowserModule, ParcelModule],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+The example below shows how you can render React parcels:
+
+```ts
+// Inside of src/app/app.component.ts
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { mountRootParcel } from 'single-spa';
+
+import { config } from './ReactWidget/ReactWidget';
+
+@Component({
+  selector: 'app-root',
+  template: '<parcel [config]="config" [mountParcel]="mountRootParcel"></parcel>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AppComponent {
+  config = config;
+  mountRootParcel = mountRootParcel;
+}
+```
+
+For React, you will need to create a file with the extension `.tsx`:
+
+```tsx
+// Inside of src/app/ReactWidget/ReactWidget.tsx
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import singleSpaReact from 'single-spa-react';
+
+const ReactWidget = () => <div>Hello from React!</div>;
+
+export const config = singleSpaReact({
+  React,
+  ReactDOM,
+  rootComponent: ReactWidget,
+});
+```
+
+## Zone-less applications
 
 > ⚠️ This feature is available starting from `single-spa-angular@4.1`.
 
@@ -799,3 +858,58 @@ const lifecycles = singleSpaAngular({
 ```
 
 > ⚠️ `single-spa-angular@4.x` requires calling `getSingleSpaExtraProviders` function in applications that have routing. Do not call this function in _zone-less_ application.
+
+## Inter-app communication via RxJS
+
+First of all, check out this [Inter-app communication guide](/docs/recommended-setup#inter-app-communication).
+
+It's possible to setup a communication between microfrontends via RxJS using [cross microfrontend imports](docs/recommended-setup/#cross-microfrontend-imports).
+
+We can not create complex abstractions, but simply export the `Subject`:
+
+```ts
+// Inside of @org/api
+import { ReplaySubject } from 'rxjs';
+import { User } from '@org/models';
+
+// `1` means that we want to buffer the last emitted value
+export const userSubject$ = new ReplaySubject<User>(1);
+```
+
+And then you just need to import this `Subject` into the microfrontend application:
+
+```ts
+// Inside of @org/app1 single-spa application
+import { userSubject$ } from '@org/api';
+import { User } from '@org/models';
+
+userSubject$.subscribe(user => {
+  // ...
+});
+
+userSubject$.next(newUser);
+```
+
+Also, you should remember that `@org/api` should be an "isolated" dependency, for example the Nrwl Nx library, where each library is in the "libs" folder and you import it via TypeScript paths.
+
+Every application that uses this library should add it to its Webpack config as an external dependency:
+
+```js
+const singleSpaAngularWebpack = require('single-spa-angular/lib/webpack').default;
+
+module.exports = (config, options) => {
+  const singleSpaWebpackConfig = singleSpaAngularWebpack(config, options);
+  singleSpaWebpackConfig.externals = [/^@org\/api$/];
+  return singleSpaWebpackConfig;
+};
+```
+
+But this library should be part of root application bundle and [shared with import maps](/docs/recommended-setup/#sharing-with-import-maps), for example:
+
+```json
+{
+  "imports": {
+    "@org/api": "http://localhost:8080/api.js"
+  }
+}
+```
