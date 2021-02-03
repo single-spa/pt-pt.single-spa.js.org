@@ -6,7 +6,7 @@ sidebar_label: Overview of single-spa
 
 ## JavaScript Microfrontends
 
-[Join the chat on Slack](https://join.slack.com/t/single-spa/shared_invite/zt-j4c38g92-JmV7O~35dkN1CnaBkK7NTw)
+[Join the chat on Slack](https://join.slack.com/t/single-spa/shared_invite/zt-l2iljnpv-pW_o92mMpMR8RWfIOI6pTQ)
 
 single-spa is a framework for bringing together multiple JavaScript microfrontends in a frontend application. Architecting your frontend using single-spa enables many benefits, such as:
 
@@ -72,7 +72,9 @@ You can help improve the single-spa website by sending pull requests to the [`si
 
 To help beginners to single-spa get started quickly we have developed [`create-single-spa`](/docs/create-single-spa/), a utility for generating starter code. This guide will cover creating the root-config and your first single-spa application. Let's get started.
 
-> Once you've gotten some of the basics down, refer to these other [single-spa examples](/docs/examples/) to see more advanced usage.
+:::note
+Once you've gotten some of the basics down, refer to these other [single-spa examples](/docs/examples/) to see more advanced usage.
+:::
 
 ### Create a root config
 
@@ -92,7 +94,9 @@ To help beginners to single-spa get started quickly we have developed [`create-s
 
 **Be sure to review the comments inside the generated code as well as the information in the Welcome application** even if some of the content is duplicated in this guide.
 
-> [single-spa-playground.org](http://single-spa-playground.org/playground) is an alternative guide to run an application without needing to create your own root-config.
+:::tip
+[single-spa-playground.org](http://single-spa-playground.org/playground) is an alternative guide to run an application without needing to create your own root-config.
+:::
 
 ### Create a single-spa application
 
@@ -135,7 +139,7 @@ As your architecture matures, you may add more shared dependencies in the future
    if using single-spa Layout Engine
 
    - Remove the existing `<application name="@single-spa/welcome"></application>` element
-   - Add your own `<application name=""></application>` element using the `name` the module name used in the import map from the previous ste
+   - Add your own `<application name=""></application>` element using the `name` the module name used in the import map from the previous step
 
 Thats it! Your first single-spa application should now be running in your root-config.
 

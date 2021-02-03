@@ -141,8 +141,9 @@ The `route` element is used to control which applications and dom elements are s
 Routes must either have a path or be a default route.
 
 - `routes` (required): An array of children elements that will be displayed when the route is active
-- `path` (optional): A string **path prefix** that will be matched against the browser's URL. The path is relative to its parent route (or the base URL). Leading and trailing `/` characters are unnecessary and are automatically applied. Paths may contain "dynamic segments" by using the `:` character (`"clients/:id/reports"`). Single-spa-layout uses single-spa's [`pathToActiveWhen` function](/docs/api/#pathtoactivewhen) to convert the path string to an [activity function](/docs/configuration/#activity-function). The path is a prefix because it will match when any subroutes of the path match.
+- `path` (optional): A path that will be matched against the browser's URL. The path is relative to its parent route (or the base URL). Leading and trailing `/` characters are unnecessary and are automatically applied. Paths may contain "dynamic segments" by using the `:` character (`"clients/:id/reports"`). Single-spa-layout uses single-spa's [`pathToActiveWhen` function](/docs/api/#pathtoactivewhen) to convert the path string to an [activity function](/docs/configuration/#activity-function). By default, the path is a prefix because it will match when any subroutes of the path match. See the `exact` attribute for exact matching.
 - `default` (optional): A boolean that determines whether this route will match all remaining URLs that have not been defined by sibling routes. This is useful for 404 Not Found pages. A sibling route is defined as any route with the same nearest-parent-route.
+- `exact` (optional, defaults to `false`): A boolean that determines whether the `path` should be treated as a prefix or exact match. When `true` the route does not activate if there are trailing characters in the URL path that are not specified in the `path` attribute.
 - `props`: An object of [single-spa custom props](/docs/building-applications/#lifecycle-props) that will be provided to the application when it is mounted. Note that these can be defined differently for the same application on different routes. You can read more about defining props within your HTML [in the docs below](#props).
 
 ### `<application>`
@@ -217,6 +218,29 @@ The `<assets>` element is used to specify the location of server-rendered applic
 
 ```html
 <assets></assets>
+```
+
+### `<redirect>`
+
+The `<redirect>` element is used to specify route redirects. On the server side, this is done with `res.redirect()`, which results in an HTTP 302 being sent to the browser. Within the browser, this is done by [canceling navigation](/docs/api#canceling-navigation) and then calling [`navigateToUrl()`](/docs/api#navigatetourl).
+
+Redirects are always defined with **absolute paths.** This means that nesting a `<redirect>` inside of a route will not behave any differently than placing the redirect at the top level. All redirects should have full paths, including a leading slash.
+
+```html
+<redirect from="/" to="/login"></redirect>
+<redirect from="/old-settings" to="/login-settings"></redirect>
+```
+
+In JSON, redirects are defined as a top-level property:
+
+```json
+{
+  "routes": [],
+  "redirects": {
+    "/": "/login",
+    "/old-settings": "/settings"
+  }
+}
 ```
 
 ### DOM elements
@@ -437,7 +461,7 @@ Sibling routes are defined as those that share a "nearest parent route." This me
 
 ## Error UIs
 
-When a single-spa application fails to load, mount, or unmount, it moves to [SKIP_BECAUSE_BROKEN or LOAD_ERROR](/docs/api#getappstatus) status. When in SKIP_BECAUSE_BROKEN status, often nothing is visible to the user and they won't understand why the application is not showing. You can call [unloadApplication](/docs/api#unloadapplication) to move the application back to NOT_LOADING status, which will cause single-spa to re-attempt downloading and mounting it. However, it is often desireable to show an error state when the application errors.
+When a single-spa application fails to load, mount, or unmount, it moves to [SKIP_BECAUSE_BROKEN or LOAD_ERROR](/docs/api#getappstatus) status. When in SKIP_BECAUSE_BROKEN status, often nothing is visible to the user and they won't understand why the application is not showing. You can call [unloadApplication](/docs/api#unloadapplication) to move the application back to NOT_LOADED status, which will cause single-spa to re-attempt downloading and mounting it. However, it is often desireable to show an error state when the application errors.
 
 An error UI is defined as either an HTML string or as a [parcel config object](/docs/parcels-overview/#parcel-configuration). HTML strings are best for static, non-interactive error states, whereas parcels are best when you want to use a framework (Vue, React, Angular, etc) to dynamically render the error state. The error UI will be shown whenever the application's status is SKIP_BECAUSE_BROKEN or LOAD_ERROR.
 

@@ -33,7 +33,7 @@ npm init single-spa
 # or
 npx create-single-spa
 
-# or 
+# or
 yarn create single-spa
 ```
 
@@ -91,7 +91,7 @@ When generating a root config, the `--layout` CLI argument indicates that you wa
 
 create-single-spa asks you if you'd like to create a single-spa application, a utility module, or a root-config. All three module types assume that you are using the [recommended setup](/docs/recommended-setup).
 
-If you select that you'd like to create a single-spa application, you will be prompted for which framework you'd like to choose. React is implemented with premade configurations for babel + webpack + jest. Angular is implemented with Angular CLI and [single-spa-angular](). Vue is implemented with Vue CLI and [vue-cli-plugin-single-spa](/ecosystem/ecosystem-vue#vue-cli).
+If you select that you'd like to create a single-spa application, you will be prompted for which framework you'd like to choose. React is implemented with premade configurations for babel + webpack + jest. Angular is implemented with Angular CLI and [single-spa-angular](/docs/ecosystem-angular). Vue is implemented with Vue CLI and [vue-cli-plugin-single-spa](/docs/ecosystem-vue#vue-cli).
 
 # NPM packages
 
@@ -139,17 +139,26 @@ module.exports = (webpackConfigEnv, argv) => {
     // See https://webpack.js.org/guides/environment-variables/#root for explanation of webpackConfigEnv
     webpackConfigEnv,
     // The CLI commands in the package.json script that triggered this build
-    argv,     
+    argv,
     // optional
     // This changes whether package names that start with @your-org-name are
     // treated as webpack externals or not. Defaults to true
     orgPackagesAsExternal: true,
-  })
+
+    // optional, defaults to 1
+    // This is the rootDirectoryLevel that is passed to https://github.com/joeldenning/systemjs-webpack-interop
+    rootDirectoryLevel: 1,
+    
+    // optional, defaults to false
+    // Disable html-webpack-plugin (and standalone-single-spa-webpack-plugin) entirely
+    // This is intended for root configs, but can be used in other cases, too
+    disableHtmlGeneration: false
+  });
 
   return webpackMerge.smart(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
-  })
-}
+  });
+};
 ```
 
 ## webpack-config-single-spa-react
@@ -182,17 +191,21 @@ module.exports = (webpackConfigEnv, argv) => {
     // See https://webpack.js.org/guides/environment-variables/#root for explanation of webpackConfigEnv
     webpackConfigEnv,
     // The CLI commands in the package.json script that triggered this build
-    argv, 
+    argv,
     // optional
     // This changes whether package names that start with @your-org-name are
     // treated as webpack externals or not. Defaults to true
     orgPackagesAsExternal: true,
-  })
+
+    // optional, defaults to 1
+    // This is the rootDirectoryLevel that is passed to https://github.com/joeldenning/systemjs-webpack-interop
+    rootDirectoryLevel: 1,
+  });
 
   return webpackMerge.smart(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
-  })
-}
+  });
+};
 ```
 
 ## webpack-config-single-spa-ts
@@ -226,20 +239,22 @@ module.exports = (webpackConfigEnv, argv) => {
     webpackConfigEnv,
     // The CLI commands in the package.json script that triggered this build
     argv,
-  })
+  });
 
   return webpackMerge.smart(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
-  })
-}
+  });
+};
 ```
 
 ```js
 const singleSpaTs = require('webpack-config-single-spa-ts');
 
 // Alternatively, you may modify a webpack config directly
-const myOtherWebpackConfig = {/* ... */}
-const finalConfig = singleSpaDefaults.modifyConfig(myOtherWebpackConfig)
+const myOtherWebpackConfig = {
+  /* ... */
+};
+const finalConfig = singleSpaDefaults.modifyConfig(myOtherWebpackConfig);
 ```
 
 ## webpack-config-single-spa-react-ts
@@ -267,25 +282,33 @@ module.exports = (webpackConfigEnv, argv) => {
   const defaultConfig = singleSpaDefaults({
     // The name of the organization this application is written for
     orgName: 'name-of-company',
-    
+
     // The name of the current project. This usually matches the git repo's name
     projectName: 'name-of-project',
-    
+
     // optional
     // This changes whether package names that start with @your-org-name are
     // treated as webpack externals or not. Defaults to true
     orgPackagesAsExternal: true,
-    
+
     // See https://webpack.js.org/guides/environment-variables/#root for explanation of webpackConfigEnv
     webpackConfigEnv,
-    
+
     // optional
     // This changes whether package names that start with @your-org-name are
     // treated as webpack externals or not. Defaults to true
     orgPackagesAsExternal: true,
-    
+
     // The CLI commands in the package.json script that triggered this build
     argv,
+
+    // optional, defaults to 1
+    // This is the rootDirectoryLevel that is passed to https://github.com/joeldenning/systemjs-webpack-interop
+    rootDirectoryLevel: 1
+
+    // optional, defaults to false.
+    // When true, this removes html-webpack-plugin and standalone-single-spa-webpack-plugin
+    disableHtmlGeneration: false
   })
 
   return webpackMerge.smart(defaultConfig, {
@@ -320,7 +343,9 @@ const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
 
-const htmlTemplate = ejs.compile(fs.readFileSync(path.resolve(process.cwd(), 'views/index.html'), 'utf-8'));
+const htmlTemplate = ejs.compile(
+  fs.readFileSync(path.resolve(process.cwd(), 'views/index.html'), 'utf-8'),
+);
 
 http.createServer((req, res) => {
   getImportMaps({
@@ -351,13 +376,14 @@ http.createServer((req, res) => {
     // Keys that you return `true` for are preserved in the nodeImportMap.
     nodeKeyFilter(key) {
       return true;
-    }
-  })
-  .then(({browserImportMap, nodeImportMap}) => {
+    },
+  }).then(({ browserImportMap, nodeImportMap }) => {
     console.log(browserImportMap, nodeImportMap);
 
     // Example of how to inline a browser import map
-    const htmlWithInlinedImportMap = htmlTemplate({importMap: browserImportMap});
+    const htmlWithInlinedImportMap = htmlTemplate({
+      importMap: browserImportMap,
+    });
     res.setResponseHeader('Content-Type', 'text/html');
     res.status(200).send(htmlWithInlinedImportMap);
 
@@ -367,4 +393,62 @@ http.createServer((req, res) => {
     import('module-in-import-map');
   });
 });
+```
+
+## Customizing Webpack
+
+The create-single-spa CLI internally uses [webpack-merge](https://github.com/survivejs/webpack-merge) to merge together webpack configs. Additionally, the CLI generates a `webpack.config.js` file in each project where you can customize the webpack config further via `webpack-merge`.
+
+### Merging rules
+
+When merging [webpack rules](https://webpack.js.org/configuration/module/#modulerules), use webpack-merge's [`mergeWithRules`](https://github.com/survivejs/webpack-merge#mergewithrules) function to avoid duplicate rules.
+
+[Example](https://github.com/react-microfrontends/styleguide/blob/504c8516e30274fc0e3221a719d5355b14af9500/webpack.config.js#L11)
+
+### Loaders
+
+`webpack-config-single-spa` and its variants often depend on webpack [loaders](https://webpack.js.org/loaders/#root). Because webpack loaders are loaded via file path, it's possible to accidentally have duplicate copies of the same loader, if the same loader is also installed in both webpack-config-single-spa and in your project. This can result in errors.
+
+To avoid duplicate copies of loaders, first check whether it is already installed by wepback-config-single-spa before adding it to your own project ([see package.json](https://unpkg.com/webpack-config-single-spa@2.0.0/package.json)). If the loader is listed there, then **do not install it into your project, too**. If you already have the loader installed in your project, uninstall it.
+
+When referencing a loader that is installed as a dependency of webpack-config-single-spa, use [require.resolve](https://nodejs.org/api/modules.html#modules_require_resolve_request_options) to ensure the loader is imported from the correct path:
+
+```js
+const { mergeWithRules } = require('webpack-merge');
+const singleSpaDefaults = require('webpack-config-single-spa');
+
+module.exports = (webpackConfigEnv) => {
+  const defaultConfig = singleSpaDefaults({
+    orgName: "react-mf",
+    projectName: "styleguide",
+    webpackConfigEnv,
+  });
+  
+  return mergeWithRules({
+    module: {
+      rules: {
+        test: "match",
+        use: "replace",
+      },
+    },
+  })(defaultConfig, {
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: [
+            // Use require.resolve to ensure the correct loader is used
+            require.resolve("style-loader", {
+              paths: [require.resolve("webpack-config-single-spa")],
+            }),
+            require.resolve("css-loader", {
+              paths: [require.resolve("webpack-config-single-spa")],
+            }),
+            "postcss-loader",
+          ],
+        },
+      ],
+    },
+  })
+}
 ```
