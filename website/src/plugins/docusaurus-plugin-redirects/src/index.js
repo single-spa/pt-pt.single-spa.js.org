@@ -21,9 +21,9 @@ module.exports = function(context, opts) {
           return;
         }
 
-        const newLink = `${siteConfig.url}${routesPath}${
+        const newLink = `${routesPath}${
           routesPath.endsWith('/') ? '' : '/'
-        }${location.hash}`;
+        }`;
         const fileName = path.basename(routesPath);
         const filePath = path.dirname(routesPath);
         const htmlContent = `
@@ -36,7 +36,8 @@ module.exports = function(context, opts) {
     <title>Redirecting to ${newLink}</title>
   </head>
   <script>
-    window.location.href = '${newLink}';
+    debugger;
+    window.location.href = '${newLink}' + location.hash;
   </script>
 </html>
         `;
